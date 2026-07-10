@@ -414,6 +414,11 @@ body {
         <span class="res-name">IXL Skill Mapping</span>
         <span class="res-sub">Google Sheet alignment</span>
       </button>
+      <button class="res-card" onclick="pickResource('textbook')" id="tb-card" style="grid-column:1/-1">
+        <span class="res-icon">📖</span>
+        <span class="res-name">Textbook Curriculum</span>
+        <span class="res-sub">Slides · Student &amp; Teacher Pages · Practice · Assessments</span>
+      </button>
     </div>
   </div>
 </div>
@@ -551,7 +556,7 @@ function selectCourse(id) {
 function pickResource(type) {
   var c   = currentCourse;
   var clr = col(c.id);
-  var labels = { blueprints:'Assessment Blueprints', bigm:'Big-M Standards', pacing:'Pacing Guide', ixl:'IXL Skill Mapping' };
+  var labels = { blueprints:'Assessment Blueprints', bigm:'Big-M Standards', pacing:'Pacing Guide', ixl:'IXL Skill Mapping', textbook:'Textbook Curriculum' };
 
   // Update nav
   document.getElementById('nav-back-btn').textContent = '← ' + c.name + ' — ' + c.sub;
@@ -593,6 +598,22 @@ function pickResource(type) {
       + '<a class="ixl-open-btn" style="background:'+clr+'" href="'+url+'" target="_blank">🔗&nbsp; Open IXL Sheet</a>'
       + '<span class="ixl-status"><span class="status-dot '+(done?'complete':'wip')+'"></span>'+(done?'Complete':'In Progress')+'</span>'
       + '</div>';
+  }
+
+  else if (type === 'textbook') {
+    var tbLinks = {
+      g7: 'textbook-7th-standard.html'
+    };
+    var tbUrl = tbLinks[c.id];
+    if (tbUrl) {
+      content.innerHTML =
+        '<div class="ixl-block">'
+        + '<a class="ixl-open-btn" style="background:'+clr+'" href="'+tbUrl+'" target="_blank">📖&nbsp; Open Textbook Curriculum</a>'
+        + '<span class="ixl-status"><span class="status-dot complete"></span>Available — 13 Units</span>'
+        + '</div>';
+    } else {
+      content.innerHTML = '<p class="empty">Textbook curriculum for this course is not yet available.<br>Check back as materials are added.</p>';
+    }
   }
 
   // Switch views
