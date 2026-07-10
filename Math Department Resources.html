@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SSA Math Hub</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent: #2563eb;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Home screen ─── */
+#home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px 80px;
+}
+
+.site-label {
+  font-size: 0.68rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.site-title {
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: #0f172a;
+  margin-bottom: 6px;
+  text-align: center;
+}
+.site-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* ─── Custom dropdown ─── */
+.dropdown-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 48px;
+  z-index: 10;
+}
+
+.dropdown-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  font: 600 0.95rem/1 'Segoe UI', system-ui, sans-serif;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  text-align: left;
+}
+.dropdown-btn.has-value { color: #0f172a; }
+.dropdown-btn:hover, .dropdown-btn.open {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+}
+.dropdown-btn .chevron {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  transition: transform 0.2s var(--ease), color 0.2s;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+.dropdown-btn.open .chevron { transform: rotate(180deg); color: var(--accent); }
+.dropdown-btn .selected-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  margin-right: 10px; flex-shrink: 0;
+}
+
+.dropdown-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+  overflow: hidden;
+  animation: panelIn 0.18s var(--ease) both;
+}
+.dropdown-panel.open { display: block; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-group-label {
+  padding: 10px 16px 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #cbd5e1;
+}
+.dropdown-group-label:not(:first-child) {
+  border-top: 1px solid #f1f5f9;
+  margin-top: 4px;
+  padding-top: 12px;
+}
+
+.dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition: background 0.12s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+.dropdown-option:hover { background: #f8fafc; }
+.dropdown-option:last-child { margin-bottom: 6px; }
+.opt-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.opt-name { font-size: 0.88rem; font-weight: 600; color: #0f172a; }
+.opt-sub  { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; }
+
+/* ─── Resource options (fade in after course select) ─── */
+#resource-options {
+  display: none;
+  width: 100%;
+  max-width: 420px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+#resource-options.visible {
+  display: flex;
+  animation: fadeUp 0.3s var(--ease) both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.res-prompt {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  align-self: flex-start;
+}
+
+.res-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.res-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 18px 16px;
+  background: #fff;
+  border: 1.5px solid #e8edf2;
+  border-radius: 16px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: border-color 0.18s, transform 0.18s var(--ease), box-shadow 0.18s;
+  min-height: 100px;
+}
+.res-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+.res-card:active { transform: translateY(0); box-shadow: none; }
+.res-icon  { font-size: 1.2rem; margin-bottom: 10px; }
+.res-name  { font-size: 0.85rem; font-weight: 700; color: #0f172a; }
+.res-sub   { font-size: 0.7rem; color: #94a3b8; margin-top: 3px; }
+
+/* ─── Resource view (full screen) ─── */
+#resource-view {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 80px;
+  min-height: 100vh;
+}
+#resource-view.active {
+  display: flex;
+  animation: fadeUp 0.28s var(--ease) both;
+}
+
+/* Nav bar inside resource view */
+.res-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 36px;
+}
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 100px;
+  font: 600 0.8rem/1 'Segoe UI', system-ui, sans-serif;
+  color: #475569;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.nav-back:hover  { background: #f8fafc; border-color: #94a3b8; color: #0f172a; }
+.nav-back:active { transform: scale(0.97); }
+.nav-crumb {
+  font-size: 0.78rem; font-weight: 600; color: #94a3b8;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Resource content */
+.res-header {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+.res-header .breadcrumb {
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: #94a3b8; margin-bottom: 8px;
+}
+.res-header h2 {
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 800; letter-spacing: -0.4px; color: #0f172a;
+}
+
+#res-content {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Blueprint buttons */
+.bp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+}
+.bp-btn {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px 8px; border-radius: 18px;
+  border: none; color: #fff; cursor: pointer;
+  font-family: inherit; text-decoration: none;
+  min-height: 110px;
+  transition: transform 0.18s var(--ease), filter 0.15s, box-shadow 0.18s;
+}
+.bp-btn:hover { transform: translateY(-3px); filter: brightness(1.08); box-shadow: 0 12px 32px rgba(0,0,0,0.14); }
+.bp-btn:active { transform: none; filter: brightness(0.96); }
+.bp-btn .ql { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+.bp-btn .qs { font-size: 0.6rem; font-weight: 600; opacity: 0.85; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Quarter tabs */
+.q-row {
+  display: flex; gap: 8px; margin-bottom: 20px;
+  flex-wrap: wrap; justify-content: center;
+  width: 100%;
+}
+.q-btn {
+  padding: 9px 24px; border-radius: 100px;
+  border: 1.5px solid #e2e8f0; background: #fff;
+  font: 600 0.82rem/1 'Segoe UI', system-ui, sans-serif;
+  color: #475569; cursor: pointer; min-height: 40px;
+  transition: all 0.18s var(--ease);
+}
+.q-btn:hover { border-color: var(--accent); color: var(--accent); }
+.q-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Standard list */
+.std-list {
+  display: flex; flex-direction: column; gap: 7px; width: 100%;
+  padding-bottom: 40px;
+}
+.std-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; border-radius: 12px;
+  background: #fff; border: 1px solid #f1f5f9;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.std-item:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+.std-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 800; color: #fff; flex-shrink: 0; }
+.std-code  { font-size: 0.66rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; }
+.std-title { font-size: 0.84rem; font-weight: 600; color: #0f172a; line-height: 1.3; margin-top: 1px; }
+.std-arrow { margin-left: auto; font-size: 0.72rem; color: #cbd5e1; flex-shrink: 0; }
+
+/* Pacing */
+.week-block { background: #fff; border-radius: 14px; border: 1px solid #f1f5f9; overflow: hidden; width: 100%; }
+.week-head { display: flex; align-items: center; padding: 13px 16px; cursor: pointer; border: none; background: none; font-family: inherit; width: 100%; text-align: left; transition: background 0.15s; }
+.week-head:hover { background: #f8fafc; }
+.week-label { font-size: 0.82rem; font-weight: 700; color: #0f172a; }
+.week-count { font-size: 0.72rem; color: #94a3b8; margin-left: auto; }
+.week-chev  { font-size: 0.65rem; color: #cbd5e1; margin-left: 8px; transition: transform 0.2s; }
+.week-head.collapsed .week-chev { transform: rotate(-90deg); }
+.week-body { display: none; padding: 4px 12px 12px; }
+.week-body.open { display: block; }
+.week-std { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f8fafc; }
+.week-std:last-child { border-bottom: none; }
+.wstd-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.wstd-code  { font-size: 0.64rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+.wstd-title { font-size: 0.82rem; font-weight: 600; color: #0f172a; line-height: 1.3; }
+.exam-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-radius: 14px; border: 1.5px dashed #bfdbfe; background: #eff6ff; width: 100%; }
+.exam-label { font-size: 0.78rem; font-weight: 700; color: #1e40af; text-transform: uppercase; letter-spacing: 0.8px; }
+.exam-tag   { font-size: 0.82rem; font-weight: 700; color: #2563eb; }
+
+/* IXL */
+.ixl-block { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 360px; }
+.ixl-open-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 20px; border-radius: 18px; border: none; color: #fff; font: 700 1rem/1 'Segoe UI', system-ui, sans-serif; cursor: pointer; text-decoration: none; transition: transform 0.18s var(--ease), filter 0.15s, box-shadow 0.18s; }
+.ixl-open-btn:hover { transform: translateY(-3px); filter: brightness(1.08); box-shadow: 0 12px 32px rgba(0,0,0,0.16); }
+.ixl-status { font-size: 0.74rem; font-weight: 600; color: #64748b; }
+.status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.status-dot.complete { background: #10b981; }
+.status-dot.wip      { background: #f59e0b; }
+
+.empty { color: #94a3b8; font-size: 0.85rem; padding: 40px 20px; text-align: center; }
+#cf-card { grid-column: 1 / -1; }
+
+/* ─── Mobile ─── */
+@media (max-width: 480px) {
+  .res-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .res-card { min-height: 88px; padding: 14px 12px; }
+  .bp-grid { gap: 8px; }
+  #resource-view { padding: 24px 16px 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Home: dropdown + resource options ── -->
+<div id="home">
+  <p class="site-label">South Seminole Academy · 2026–27</p>
+  <h1 class="site-title">SSA Math Hub</h1>
+  <p class="site-sub">Select a course to get started</p>
+
+  <!-- Custom dropdown -->
+  <div class="dropdown-wrap">
+    <button class="dropdown-btn" id="dropdown-btn" onclick="toggleDropdown()">
+      <span id="dropdown-label">Choose a course…</span>
+      <span class="chevron">▾</span>
+    </button>
+    <div class="dropdown-panel" id="dropdown-panel"></div>
+  </div>
+
+  <!-- Resource cards: fade in after course selected -->
+  <div id="resource-options">
+    <p class="res-prompt">Access</p>
+    <div class="res-cards">
+      <button class="res-card" onclick="pickResource('blueprints')">
+        <span class="res-icon">📋</span>
+        <span class="res-name">Assessment Blueprints</span>
+        <span class="res-sub">Q1 · Q2 · Q3 PDFs</span>
+      </button>
+      <button class="res-card" onclick="pickResource('bigm')">
+        <span class="res-icon">⭐</span>
+        <span class="res-name">Big-M Standards</span>
+        <span class="res-sub">Priority standards by quarter</span>
+      </button>
+      <button class="res-card" onclick="pickResource('pacing')">
+        <span class="res-icon">📅</span>
+        <span class="res-name">Pacing Guide</span>
+        <span class="res-sub">Week-by-week breakdown</span>
+      </button>
+      <button class="res-card" onclick="pickResource('ixl')">
+        <span class="res-icon">🔗</span>
+        <span class="res-name">IXL Skill Mapping</span>
+        <span class="res-sub">Google Sheet alignment</span>
+      </button>
+      <button class="res-card" onclick="pickResource('curriculum')" id="cf-card">
+        <span class="res-icon">📚</span>
+        <span class="res-name">Curriculum Framework</span>
+        <span class="res-sub">Edge XL &amp; MFAS tasks</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Resource view (full screen) ── -->
+<div id="resource-view">
+  <div class="res-nav">
+    <button class="nav-back" id="nav-back-btn" onclick="goBack()">← Back</button>
+    <span class="nav-crumb" id="nav-crumb"></span>
+  </div>
+  <div class="res-header" id="res-header"></div>
+  <div id="res-content"></div>
+</div>
+
+<script>
+/* ── Data ─────────────────────────────────────────────── */
+const COURSES = [
+  { id:'g6',    grade:'6th Grade', name:'Math 6',  sub:'Standard',             bpFolder:'1. Assessment Blueprint/1. 6th Grade',                 bigmFolder:'2. Big-M/1. 6th Grade' },
+  { id:'g6a',   grade:'6th Grade', name:'Math 6',  sub:'Accelerated',          bpFolder:'1. Assessment Blueprint/2. 6th Accelerated',            bigmFolder:'2. Big-M/2. 6th Accelerated' },
+  { id:'gr6',   grade:'6th Grade', name:'RAMP 6',  sub:'Accelerated / Gifted', bpFolder:'1. Assessment Blueprint/3. RAMP 6',                     bigmFolder:'2. Big-M/3. RAMP 6' },
+  { id:'g7',    grade:'7th Grade', name:'Math 7',  sub:'Standard',             bpFolder:'1. Assessment Blueprint/4. 7th Grade',                 bigmFolder:'2. Big-M/4. 7th Grade' },
+  { id:'g7a',   grade:'7th Grade', name:'Math 7',  sub:'Accelerated',          bpFolder:'1. Assessment Blueprint/5. 7th Accelerated',            bigmFolder:'2. Big-M/5. 7th Accelerated' },
+  { id:'g8pre', grade:'8th Grade', name:'Math 8',  sub:'Pre-Algebra',          bpFolder:'1. Assessment Blueprint/6. 8th Grade [Pre-Algebra]',    bigmFolder:'2. Big-M/6. 8th Grade [Pre-Algebra]' },
+  { id:'g8alg', grade:'8th Grade', name:'Math 8',  sub:'Algebra I',            bpFolder:'1. Assessment Blueprint/7. 8th Grade [Algebra I]',      bigmFolder:'2. Big-M/7. 8th Grade [Algebra I]' },
+  { id:'g8geo', grade:'8th Grade', name:'Math 8',  sub:'Geometry',             bpFolder:'1. Assessment Blueprint/8. 8th Grade [Geometry]',       bigmFolder:'2. Big-M/8. 8th Grade [Geometry]' },
+];
+const GROUPS = [
+  { label: '6th Grade', ids: ['g6','g6a','gr6'] },
+  { label: '7th Grade', ids: ['g7','g7a'] },
+  { label: '8th Grade', ids: ['g8pre','g8alg','g8geo'] },
+];
+const COLORS = { g6:'#2563eb', g6a:'#7c3aed', gr6:'#db2777', g7:'#059669', g7a:'#047857', g8pre:'#d97706', g8alg:'#dc2626', g8geo:'#4f46e5' };
+const BIGM = {
+  g6:    { q1:['1. MA.6.NSO.2.1.pdf','2. MA.6.NSO.2.2.pdf','3. MA.6.NSO.3.1.pdf','4. MA.6.NSO.3.2.pdf','5. MA.6.NSO.2.3.pdf','6. MA.6.NSO.3.5.pdf'], q2:['1. MA.6.NSO.1.1.pdf','2. MA.6.NSO.1.2.pdf','3. MA.6.NSO.1.3.pdf','4. MA.6.NSO.1.4.pdf','5. MA.6.GR.1.1.pdf','6. MA.6.GR.1.2.pdf','7. MA.6.GR.1.3.pdf','8. MA.6.AR.3.1.pdf','9. MA.6.AR.3.2.pdf','10. MA.6.AR.3.3.pdf'], q3:['1. MA.6.NSO.3.3.pdf','2. MA.6.NSO.3.4.pdf','3. MA.6.NSO.4.1.pdf','4. MA.6.NSO.4.2.pdf','5. MA.6.GR.2.1.pdf','6. MA.6.GR.2.2.pdf','7. MA.6.GR.2.3.pdf','8. MA.6.GR.2.4.pdf','9. MA.6.DP.1.1.pdf','10. MA.6.DP.1.2.pdf'] },
+  g6a:   { q1:['1. MA.6.NSO.3.1_6A.pdf','2. MA.6.NSO.3.2_6A.pdf','3. MA.6.NSO.2.1_6A.pdf','4. MA.6.NSO.2.2_6A.pdf','5. MA.6.NSO.2.3_6A.pdf','6. MA.6.NSO.3.5_6A.pdf','7. MA.6.NSO.1.1_6A.pdf','8. MA.6.NSO.1.2_6A.pdf','9. MA.6.NSO.1.3_6A.pdf','10. MA.6.NSO.1.4_6A.pdf'], q2:['1. MA.6.AR.3.1_6A.pdf','2. MA.6.AR.3.2_6A.pdf','3. MA.6.AR.3.3_6A.pdf','4. MA.6.AR.3.4_6A.pdf','5. MA.6.AR.3.5_6A.pdf','6. MA.6.NSO.3.3_6A.pdf','7. MA.6.NSO.3.4_6A.pdf','8. MA.6.NSO.4.1_6A.pdf','9. MA.6.NSO.4.2_6A.pdf'], q3:['1. MA.6.GR.2.1_6A.pdf','2. MA.6.GR.2.2_6A.pdf','3. MA.6.GR.2.3_6A.pdf','4. MA.6.GR.2.4_6A.pdf','5. MA.7.DP.1.1_6A.pdf','6. MA.7.DP.1.2_6A.pdf','7. MA.7.DP.1.3_6A.pdf','8. MA.6.DP.1.4_6A.pdf','9. MA.6.DP.1.5_6A.pdf','10. MA.6.DP.1.6_6A.pdf','11. MA.6.DP.1.1_6A.pdf','12. MA.6.DP.1.2_6A.pdf','13. MA.6.DP.1.3_6A.pdf'] },
+  gr6:   { q1:['1. MA.7.NSO.2.1_6A.pdf','2. MA.7.NSO.2.2_6A.pdf','3. MA.7.NSO.2.3_6A.pdf','4. MA.7.NSO.1.2_7A.pdf','5. MA.7.AR.2.2_7A.pdf','6. MA.7.AR.2.1_6A.pdf','7. MA.8.AR.2.2_7A.pdf','8. MA.8.AR.2.3_7A.pdf','9. MA.8.NSO.1.1_7A.pdf','10. MA.8.NSO.1.2_7A.pdf'], q2:['1. MA.8.NSO.1.7_7A.pdf','2. MA.7.AR.3.1_6A.pdf','3. MA.7.AR.3.2_6A.pdf','4. MA.7.GR.1.5_7A.pdf','5. MA.7.AR.3.3_7A.pdf','6. MA.7.AR.4.5_7A.pdf','7. MA.7.DP.1.3_6A.pdf'], q3:['1. MA.7.AR.4.1_7A.pdf','2. MA.7.AR.4.2_7A.pdf','3. MA.7.AR.4.3_7A.pdf','4. MA.7.AR.4.4_7A.pdf','5. MA.7.GR.1.3_7A.pdf','6. MA.7.GR.1.4_7A.pdf','7. MA.7.DP.1.4_7A.pdf','8. MA.7.GR.1.1_6A.pdf','9. MA.7.GR.1.2_7.pdf','10. MA.7.GR.2.1_7A.pdf','11. MA.7.GR.2.2_7A.pdf','12. MA.7.GR.2.3_7A.pdf','13. MA.8.AR.3.1_7A.pdf','14. MA.8.AR.3.2_7A.pdf','15. MA.8.AR.3.4_7A.pdf'] },
+  g7:    { q1:['1. MA.7.NSO.1.2.pdf','2. MA.7.DP.2.1.pdf','3. MA.7.DP.2.2.pdf','4. MA.7.DP.2.3.pdf','5. MA.7.DP.2.4.pdf','6. MA.7.NSO.2.2.pdf','7. MA.7.NSO.2.3.pdf'], q2:['1.. MA.7.GR.1.1.pdf','2. MA.7.GR.1.2.pdf','3. MA.7.GR.1.3.pdf','4. MA.7.GR.1.4.pdf','5. MA.7.DP.1.3.pdf','6. MA.7.GR.1.5.pdf','7. MA.7.AR.3.3.pdf'], q3:['1. MA.7.AR.4.5.pdf','2. MA.7.DP.1.4_.pdf','3. MA.7.AR.3.1.pdf','4. MA.7.NSO.1.1.pdf','5. MA.7.NSO.2.1.pdf','6. MA.7.AR.1.1.pdf','7. MA.7.AR.1.2.pdf'] },
+  g7a:   { q1:['1. MA.7.NSO.1.2_7A.pdf','2. MA.7.AR.2.2_7A.pdf','3. MA.8.AR.2.2_7A.pdf','4. MA.8.AR.2.3_7A.pdf','5. MA.8.NSO.1.1_7A.pdf','6. MA.8.NSO.1.2_7A.pdf','7. MA.7.NSO.1.1_7A.pdf','8. MA.8.NSO.1.3_7A.pdf','9. MA.8.NSO.1.4_7A.pdf'], q2:['1. MA.7.GR.1.5_7A.pdf','2. MA.7.AR.3.3_7A.pdf','3. MA.7.AR.4.5_7A.pdf','4. MA.8.GR.1.1_7A.pdf','5. MA.8.GR.1.2_7A.pdf','6. MA.8.GR.1.3_7A.pdf','7. MA.8.GR.2.4_7A.pdf','8. MA.7.AR.4.1_7A.pdf','9. MA.7.AR.4.2_7A.pdf','10. MA.7.AR.4.3_7A.pdf','11. MA.7.AR.4.4_7A.pdf'], q3:['1. MA.7.GR.2.1_7A.pdf','2. MA.7.GR.2.2_7A.pdf','3. MA.7.GR.2.3_7A.pdf','4. MA.8.AR.3.1_7A.pdf','5. MA.8.AR.3.2_7A.pdf','6. MA.8.AR.3.3_7A.pdf','7. MA.8.AR.3.4_7A.pdf','8. MA.8.AR.3.5_7A.pdf','9. MA.8.AR.2.1_7A.pdf','10. MA.8.AR.4.1_7A.pdf','11. MA.8.AR.4.2_7A.pdf','12. MA.8.AR.4.3_7A.pdf'] },
+  g8pre: { q1:['1. MA.8.AR.2.3.pdf','2. MA.8.NSO.1.1.pdf','3. MA.8.NSO.1.2.pdf','4. MA.8.NSO.1.4.pdf','5. MA.8.NSO.1.5.pdf','6. MA.8.NSO.1.6.pdf','7. MA.8.NSO.1.3.pdf'], q2:['1. MA.8.AR.1.1.pdf','2. MA.8.AR.2.2.pdf','3. MA.8.GR.1.1.pdf','4. MA.8.GR.1.2.pdf','5. MA.8.GR.1.3.pdf','6. MA.8.AR.3.1.pdf','7. MA.8.GR.2.4.pdf','8. MA.8.AR.3.2.pdf'], q3:['1. MA.8.AR.2.1.pdf','2. MA.8.AR.4.1.pdf','3. MA.8.AR.4.2.pdf','4. MA.8.AR.4.3.pdf','5. MA.8.GR.2.1.pdf','6. MA.8.GR.2.2.pdf','7. MA.8.F.1.1.pdf','8. MA.8.F.1.3.pdf'] },
+  g8alg: { q1:['1. MA.912.F.1.1.pdf','2. MA.912.F.1.2.pdf','3. MA.912.NSO.1.1.pdf','4. MA.912.NSO.1.4.pdf','5. MA.912.NSO.1.2.pdf','6. MA.912.AR.1.3.pdf','7. MA.912.AR.1.4.pdf','8. MA.912.AR.1.2.pdf','9. MA.912.AR.2.2.pdf','10. MA.912.DP.2.4.pdf','11. MA.912.DP.2.6.pdf'], q2:['1. MA.912.F.1.2.pdf','2. MA.912.F.1.5.pdf','3. MA.912.AR.2.3.pdf','4. MA.912.AR.2.4.pdf','5. MA.912.AR.2.5.pdf','6. MA.912.AR.1.2.pdf','7. MA.912.AR.2.1.pdf','8. MA.912.AR.9.1.pdf','9. MA.912.AR.9.6.pdf','10. MA.912.AR.2.6.pdf','11. MA.912.AR.2.7.pdf','12. MA.912.AR.2.8.pdf'], q3:['1. MA.912.AR.9.4.pdf','2. MA.912.AR.1.7.pdf','3. MA.912.AR.3.6.pdf','4. MA.912.AR.3.7.pdf','5. MA.912.AR.3.8.pdf','6. MA.912.AR.3.4.pdf','7. MA.912.AR.3.5.pdf','8. MA.912.AR.3.1.pdf'] },
+  g8geo: {
+    q1:['1. MA.912.GR.1.1.pdf','2. MA.912.GR.3.1.pdf','3. MA.912.GR.3.3.pdf','4. MA.912.LT.4.3.pdf','5. MA.912.LT.4.10.pdf','6. MA.912.GR.1.3.pdf'],
+    q2:['1. MA.912.GR.2.1.pdf','2. MA.912.GR.2.2.pdf','3. MA.912.GR.2.5.pdf','4. MA.912.GR.2.3.pdf','5. MA.912.GR.1.2.pdf','6. MA.912.GR.1.6.pdf','7. MA.912.GR.2.6.pdf','8. MA.912.GR.1.3.pdf','9. MA.912.GR.3.3.pdf'],
+    q3:['1. MA.912.GR.1.4.pdf','2. MA.912.GR.1.5.pdf','3. MA.912.GR.1.2.pdf','4. MA.912.GR.1.6.pdf','5, MA.912.GR.2.2.pdf','6. MA.912.GR.2.3.pdf','7. MA.912.GR.2.5.pdf','8. MA.912.GR.1.3.pdf','9. MA.912.T.1.2.pdf','10. MA.912.T.1.1.pdf'],
+  },
+};
+const IXL = {
+  g6:    { id:'1JKXZNt-bdT1CwBj3OmYF2LfWh76deUw3r6roukDA93A', status:'complete' },
+  g6a:   { id:'1F1AMfBlnEn8GvLEoQ3XVsgRXQMgFjZNXn31VvJaeq3U', status:'complete' },
+  gr6:   { id:'1080ncwWzgY15EbOhPqzuYl4roDHQFWQvXpju_Z-a9B4', status:'complete' },
+  g7:    { id:'1CI_a3TZ1wXcSHxMKxfsf8MCBxQ0_mQALlI3FsjHp4R8', status:'complete' },
+  g7a:   { id:'1wKKLePPu7UeOh8dUGE91n6UliC5a3jmbUwV7DMQgFmI', status:'complete' },
+  g8pre: { id:'1BBTBrsCD5fIYvhf37A1idI8BA0KQ9tdufMS_BXOyitw', status:'complete' },
+  g8alg: { id:'1N4DQ7gsrnokYyLLMyNX5TaChlbrQC03j4DMyUYED1kk', status:'complete' },
+  g8geo: { id:'1t6D0ZGF2zmzfuyNzuhLqhWGRB4iJ1mrslNphBqijG6o', status:'wip' },
+};
+const PTITLES = {
+  'MA.6.NSO.2.1':'Multiply & Divide Positive Multi-Digit Decimals','MA.6.NSO.2.2':'Multiply & Divide Positive Fractions & Mixed Numbers','MA.6.NSO.2.3':'Solve Multi-Step Real-World Problems with Decimals or Fractions','MA.6.NSO.3.1':'Find GCF & LCM','MA.6.NSO.3.2':'Rewrite Sums Using the Distributive Property','MA.6.NSO.3.3':'Evaluate Expressions with Whole-Number Exponents','MA.6.NSO.3.4':'Express Numbers in Scientific Notation','MA.6.NSO.3.5':'Rewrite Positive Rational Numbers in Equivalent Forms','MA.6.NSO.1.1':'Represent Integers & Rational Numbers on a Number Line','MA.6.NSO.1.2':'Represent Quantities with Opposite Values','MA.6.NSO.1.3':'Absolute Value as Distance from Zero','MA.6.NSO.1.4':'Compare & Order Rational Numbers','MA.6.NSO.4.1':'Add & Subtract Integers Using Models','MA.6.NSO.4.2':'Multiply & Divide Integers — Sign Rules','MA.6.GR.1.1':'Area of Right Triangles','MA.6.GR.1.2':'Area of Quadrilaterals & Composite Figures','MA.6.GR.1.3':'Area of Polygons — Real-World Problems','MA.6.GR.2.1':'Area of Polygons Using Coordinate Geometry','MA.6.GR.2.2':'Surface Area of Rectangular Prisms Using Nets','MA.6.GR.2.3':'Volume of Rectangular Prisms with Fractional Edge Lengths','MA.6.GR.2.4':'Surface Area of Pyramids Using Nets','MA.6.AR.3.1':'Write & Interpret Ratios','MA.6.AR.3.2':'Determine & Interpret Unit Rates','MA.6.AR.3.3':'Solve Problems Using Ratio & Rate Reasoning','MA.6.AR.3.4':'Equivalent Ratios — Tables & Graphs','MA.6.AR.3.5':'Solve Ratio Problems Using Tape Diagrams','MA.6.DP.1.1':'Statistical Questions, Distributions & Measures of Center/Spread','MA.6.DP.1.2':'Create & Interpret Dot Plots, Histograms & Box Plots','MA.6.DP.1.3':'Represent & Interpret Data Using Frequency Tables','MA.6.DP.1.4':'Measures of Center — Mean, Median & Mode','MA.6.DP.1.5':'Measures of Spread — Range, MAD & IQR','MA.6.DP.1.6':'Choose Appropriate Measure of Center & Spread',
+  'MA.7.NSO.1.1':'Add & Subtract Rational Numbers Including Negative Fractions','MA.7.NSO.1.2':'Rewrite Rational Numbers in Equivalent Forms','MA.7.NSO.2.1':'Order of Operations with Rational Numbers','MA.7.NSO.2.2':'Add, Subtract, Multiply & Divide Rational Numbers','MA.7.NSO.2.3':'Multi-Step Real-World Problems with Rational Numbers','MA.7.AR.1.1':'Apply Properties to Add, Subtract, Factor & Expand Linear Expressions','MA.7.AR.1.2':'Determine Whether Two Linear Expressions Are Equivalent','MA.7.AR.2.1':'Write & Solve One- and Two-Step Linear Equations','MA.7.AR.2.2':'Write & Solve Multi-Step Linear Equations','MA.7.AR.3.1':'Proportional Reasoning — Percents & Rates','MA.7.AR.3.2':'Proportional Relationships — Scale Factors','MA.7.AR.3.3':'Convert Units Across Measurement Systems','MA.7.AR.4.1':'Write & Solve One-Variable Equations','MA.7.AR.4.2':'Write & Solve Two-Step Equations','MA.7.AR.4.3':'Solve Multi-Step Problems with Linear Equations','MA.7.AR.4.4':'Solve & Graph Absolute Value Equations','MA.7.AR.4.5':'Write, Solve & Graph One-Step Linear Inequalities','MA.7.GR.1.1':'Circumference of Circles','MA.7.GR.1.2':'Area of Circles','MA.7.GR.1.3':'Area & Perimeter of Composite Figures with Circles','MA.7.GR.1.4':'Cross Sections of 3D Figures','MA.7.GR.1.5':'Similar Figures & Scale Drawings','MA.7.GR.2.1':'Surface Area of Triangular Prisms','MA.7.GR.2.2':'Surface Area of Cylinders','MA.7.GR.2.3':'Volume of Cylinders','MA.7.DP.1.1':'Mean Absolute Deviation (MAD)','MA.7.DP.1.2':'Quartiles & Interquartile Range (IQR)','MA.7.DP.1.3':'Statistical Inference from Random Samples','MA.7.DP.1.4':'Compare Data Distributions','MA.7.DP.2.1':'Theoretical Probability of Simple Events','MA.7.DP.2.2':'Experimental vs Theoretical Probability','MA.7.DP.2.3':'Probability of Compound Events','MA.7.DP.2.4':'Predict & Assess Probability',
+  'MA.8.NSO.1.1':'Classify Real Numbers — Rational vs. Irrational','MA.8.NSO.1.2':'Locate & Compare Rational & Irrational Numbers','MA.8.NSO.1.3':'Properties of Integer Exponents','MA.8.NSO.1.4':'Read & Express Numbers in Scientific Notation','MA.8.NSO.1.5':'Add & Subtract Numbers in Scientific Notation','MA.8.NSO.1.6':'Multiply & Divide Numbers in Scientific Notation','MA.8.NSO.1.7':'Real-World Problems with Scientific Notation','MA.8.AR.1.1':'Generate Equivalent Algebraic Expressions','MA.8.AR.2.1':'Identify Slope From Tables, Graphs & Equations','MA.8.AR.2.2':'Write Linear Equations — Point-Slope & Slope-Intercept','MA.8.AR.2.3':'Solve Linear Equations in One Variable','MA.8.AR.3.1':'Solve Systems by Graphing','MA.8.AR.3.2':'Solve Systems by Substitution','MA.8.AR.3.3':'Solve Systems by Elimination','MA.8.AR.3.4':'Determine Best Strategy for Systems','MA.8.AR.3.5':'Real-World Applications of Systems','MA.8.AR.4.1':'Evaluate Expressions with Integer Exponents','MA.8.AR.4.2':'Apply Laws of Exponents','MA.8.AR.4.3':'Solve Equations Involving Square & Cube Roots','MA.8.GR.1.1':'Apply the Pythagorean Theorem','MA.8.GR.1.2':'Pythagorean Theorem — Real-World Problems','MA.8.GR.1.3':'Determine if a Triangle is a Right Triangle','MA.8.GR.2.1':'Dilations on the Coordinate Plane','MA.8.GR.2.2':'Reflections on the Coordinate Plane','MA.8.GR.2.3':'Rotations on the Coordinate Plane','MA.8.GR.2.4':'Translations on the Coordinate Plane','MA.8.F.1.1':'Determine if a Relation Is a Function','MA.8.F.1.3':'Compare Properties of Two Functions',
+  'MA.912.F.1.1':'Determine Whether Relations Are Functions','MA.912.F.1.2':'Identify & Interpret Key Features of Functions','MA.912.F.1.5':'Calculate & Interpret Average Rate of Change','MA.912.NSO.1.1':'Extend Understanding of the Real Number System','MA.912.NSO.1.2':'Rational & Irrational Numbers — Approximate Values','MA.912.NSO.1.4':'Simplify Radical Expressions','MA.912.AR.1.2':'Solve Linear Equations in One Variable','MA.912.AR.1.3':'Write Linear Equations in Standard Form','MA.912.AR.1.4':'Determine Slope & y-Intercept','MA.912.AR.1.7':'Solve Linear Inequalities in One Variable','MA.912.AR.2.1':'Graph Linear Equations','MA.912.AR.2.2':'Write Equation of a Line','MA.912.AR.2.3':'Equations of Parallel & Perpendicular Lines','MA.912.AR.2.4':'Graph & Transform Absolute Value Functions','MA.912.AR.2.5':'Solve Absolute Value Equations','MA.912.AR.2.6':'Solve & Graph Systems of Linear Inequalities','MA.912.AR.2.7':'Graph Systems of Linear Equations','MA.912.AR.2.8':'Solve Systems Using Substitution & Elimination','MA.912.AR.3.1':'Add & Subtract Polynomials','MA.912.AR.3.4':'Factor Polynomials Using GCF & Grouping','MA.912.AR.3.5':'Factor Quadratic Trinomials','MA.912.AR.3.6':'Multiply Polynomials','MA.912.AR.3.7':'Divide Polynomials Using Long Division','MA.912.AR.3.8':'Simplify Polynomial Expressions','MA.912.AR.9.1':'Solve Quadratic Equations by Factoring','MA.912.AR.9.4':'Solve Quadratics Using the Quadratic Formula','MA.912.AR.9.6':'Solve Systems of Linear & Quadratic Equations','MA.912.DP.2.4':'Calculate Simple & Conditional Probability','MA.912.DP.2.6':'Use Conditional Probability to Evaluate Independence',
+  'MA.912.GR.1.1':'Prove & Apply Properties of Lines and Angles',
+  'MA.912.GR.1.2':'Prove Triangle Congruence — SSS, SAS, ASA, AAS & HL',
+  'MA.912.GR.1.3':'Prove Triangle Similarity — AA, SAS & SSS',
+  'MA.912.GR.1.4':'Apply Triangle Theorems — Midsegments, Bisectors & Medians',
+  'MA.912.GR.1.5':'Prove & Apply Properties of Quadrilaterals',
+  'MA.912.GR.1.6':'Solve Problems Using Distance, Midpoint & Slope Formulas',
+  'MA.912.GR.2.1':'Translate Figures on the Coordinate Plane',
+  'MA.912.GR.2.2':'Reflect Figures on the Coordinate Plane',
+  'MA.912.GR.2.3':'Rotate Figures on the Coordinate Plane',
+  'MA.912.GR.2.5':'Dilate Figures Using Scale Factors',
+  'MA.912.GR.2.6':'Compose & Apply Rigid Transformations',
+  'MA.912.GR.3.1':'Arc Length & Sector Area of Circles',
+  'MA.912.GR.3.3':'Inscribed Angles & Polygons in Circles',
+  'MA.912.LT.4.3':'Represent & Evaluate Conditional Statements & Truth Values',
+  'MA.912.LT.4.10':'Construct & Judge Validity of Logical Arguments & Proofs',
+  'MA.912.T.1.1':'Define & Apply Trigonometric Ratios in Right Triangles',
+  'MA.912.T.1.2':'Solve Right Triangles Using Trigonometric Ratios',
+};
+
+/* ── Curriculum Framework data ───────────────────────── */
+const CF = {
+  g7: {
+    edgeXL: [
+      { file: 'Curriculm Framework/7th Grade/Edge XL/MA.7.NSO.1.2.pdf', code: 'MA.7.NSO.1.2' },
+    ],
+    mfas: [
+      { file: 'Curriculm Framework/7th Grade/MFAS tasks/MA.7.NSO.1.2_MFAS Tasks.docx', code: 'MA.7.NSO.1.2' },
+    ],
+  },
+};
+
+/* ── Helpers ─────────────────────────────────────────── */
+var currentCourse = null;
+function col(id) { return COLORS[id] || '#64748b'; }
+function enc(p)  { return p.split('/').map(encodeURIComponent).join('/'); }
+function getCode(f) { return f.replace(/^\d+[.,]\s*\.?\s*/,'').replace(/\.pdf$/i,'').replace(/_.*$/,''); }
+function qFolder(q) { return {q1:'Q1 Big-M',q2:'Q2 Big-M',q3:'Q3 Big-M'}[q]; }
+
+/* ── Build dropdown panel ───────────────────────────── */
+(function buildDropdown() {
+  var panel = document.getElementById('dropdown-panel');
+  GROUPS.forEach(function(g) {
+    var lbl = document.createElement('div');
+    lbl.className = 'dropdown-group-label';
+    lbl.textContent = g.label;
+    panel.appendChild(lbl);
+    g.ids.forEach(function(id) {
+      var c = COURSES.find(function(x){ return x.id === id; });
+      var btn = document.createElement('button');
+      btn.className = 'dropdown-option';
+      btn.innerHTML =
+        '<span class="opt-dot" style="background:'+col(id)+'"></span>'
+        + '<span><span class="opt-name">'+c.name+' — '+c.sub+'</span></span>';
+      btn.addEventListener('click', function() { selectCourse(id); });
+      panel.appendChild(btn);
+    });
+  });
+})();
+
+/* ── Dropdown open/close ────────────────────────────── */
+var dropdownOpen = false;
+
+function toggleDropdown() {
+  dropdownOpen = !dropdownOpen;
+  document.getElementById('dropdown-btn').classList.toggle('open', dropdownOpen);
+  document.getElementById('dropdown-panel').classList.toggle('open', dropdownOpen);
+}
+
+document.addEventListener('click', function(e) {
+  if (!document.querySelector('.dropdown-wrap').contains(e.target)) {
+    dropdownOpen = false;
+    document.getElementById('dropdown-btn').classList.remove('open');
+    document.getElementById('dropdown-panel').classList.remove('open');
+  }
+});
+
+/* ── Select a course ────────────────────────────────── */
+function selectCourse(id) {
+  currentCourse = COURSES.find(function(c){ return c.id === id; });
+  var clr = col(id);
+
+  // Close dropdown and update button label
+  dropdownOpen = false;
+  var btn = document.getElementById('dropdown-btn');
+  btn.classList.remove('open');
+  btn.classList.add('has-value');
+  document.getElementById('dropdown-panel').classList.remove('open');
+  btn.innerHTML =
+    '<span style="display:flex;align-items:center;gap:8px">'
+    + '<span class="selected-dot" style="background:'+clr+'"></span>'
+    + currentCourse.name + ' — ' + currentCourse.sub
+    + '</span>'
+    + '<span class="chevron">▾</span>';
+
+  // Update accent color
+  document.documentElement.style.setProperty('--accent', clr);
+
+  // Fade in resource options
+  var opts = document.getElementById('resource-options');
+  opts.classList.remove('visible');
+  // Force reflow so animation replays
+  void opts.offsetWidth;
+  opts.classList.add('visible');
+}
+
+/* ── Pick a resource ────────────────────────────────── */
+function pickResource(type) {
+  var c   = currentCourse;
+  var clr = col(c.id);
+  var labels = { blueprints:'Assessment Blueprints', bigm:'Big-M Standards', pacing:'Pacing Guide', ixl:'IXL Skill Mapping', curriculum:'Curriculum Framework' };
+
+  // Update nav
+  document.getElementById('nav-back-btn').textContent = '← ' + c.name + ' — ' + c.sub;
+  document.getElementById('nav-crumb').textContent = labels[type];
+
+  // Header
+  document.getElementById('res-header').innerHTML =
+    '<div class="breadcrumb">'+c.name+' · '+c.sub+'</div>'
+    + '<h2>'+labels[type]+'</h2>';
+
+  // Content
+  var content = document.getElementById('res-content');
+
+  if (type === 'blueprints') {
+    content.innerHTML = '<div class="bp-grid">'
+      + ['Q1','Q2','Q3'].map(function(q){
+          var path = enc(c.bpFolder+'/'+q+' Assessment Blueprint.pdf');
+          return '<a class="bp-btn" style="background:'+clr+'" href="'+path+'" target="_blank">'
+            + '<span class="ql">'+q+'</span><span class="qs">Blueprint</span></a>';
+        }).join('')
+      + '</div>';
+  }
+  else if (type === 'bigm' || type === 'pacing') {
+    content.innerHTML =
+      '<div class="q-row">'
+      + ['q1','q2','q3'].map(function(q,i){
+          return '<button class="q-btn'+(i===0?' active':'')+'" data-q="'+q+'" onclick="switchQ(this,\''+type+'\')">Q'+(i+1)+'</button>';
+        }).join('')
+      + '</div>'
+      + '<div class="std-list" id="q-content"></div>';
+    renderQContent('q1', c, clr, type);
+  }
+  else if (type === 'ixl') {
+    var ixl = IXL[c.id];
+    var url = 'https://docs.google.com/spreadsheets/d/'+ixl.id+'/edit';
+    var done = ixl.status === 'complete';
+    content.innerHTML =
+      '<div class="ixl-block">'
+      + '<a class="ixl-open-btn" style="background:'+clr+'" href="'+url+'" target="_blank">🔗&nbsp; Open IXL Sheet</a>'
+      + '<span class="ixl-status"><span class="status-dot '+(done?'complete':'wip')+'"></span>'+(done?'Complete':'In Progress')+'</span>'
+      + '</div>';
+  }
+  else if (type === 'curriculum') {
+    var cf = CF[c.id];
+    if (!cf) {
+      content.innerHTML = '<p class="empty">No curriculum framework resources yet for this course.<br>Check back as materials are added.</p>';
+    } else {
+      var html = '<div class="std-list">';
+      if (cf.edgeXL && cf.edgeXL.length) {
+        html += '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;padding:4px 0 8px;">Edge XL</div>';
+        cf.edgeXL.forEach(function(r) {
+          html += '<a class="std-item" href="'+enc(r.file)+'" target="_blank">'
+            + '<div class="std-num" style="background:'+clr+'">XL</div>'
+            + '<div><div class="std-code">'+r.code+'</div><div class="std-title">'+(PTITLES[r.code]||r.code)+'</div></div>'
+            + '<span class="std-arrow">↗</span></a>';
+        });
+      }
+      if (cf.mfas && cf.mfas.length) {
+        html += '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;padding:12px 0 8px;">MFAS Tasks</div>';
+        cf.mfas.forEach(function(r) {
+          html += '<a class="std-item" href="'+enc(r.file)+'" target="_blank">'
+            + '<div class="std-num" style="background:'+clr+'">FA</div>'
+            + '<div><div class="std-code">'+r.code+'</div><div class="std-title">'+(PTITLES[r.code]||r.code)+'</div></div>'
+            + '<span class="std-arrow">↗</span></a>';
+        });
+      }
+      html += '</div>';
+      content.innerHTML = html;
+    }
+  }
+
+  // Switch views
+  document.getElementById('home').style.display = 'none';
+  var rv = document.getElementById('resource-view');
+  rv.classList.add('active');
+  rv.scrollTop = 0;
+}
+
+/* ── Back ───────────────────────────────────────────── */
+function goBack() {
+  document.getElementById('resource-view').classList.remove('active');
+  document.getElementById('home').style.display = 'flex';
+}
+
+/* ── Quarter switching ──────────────────────────────── */
+function switchQ(btn, type) {
+  document.querySelectorAll('.q-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderQContent(btn.dataset.q, currentCourse, col(currentCourse.id), type);
+}
+
+function renderQContent(q, c, clr, type) {
+  var files = BIGM[c.id][q];
+  var area  = document.getElementById('q-content');
+  if (!files || files.length === 0) {
+    area.innerHTML = '<p class="empty">No data for this quarter.</p>';
+    return;
+  }
+  if (type === 'bigm') {
+    var qf = qFolder(q);
+    area.innerHTML = files.map(function(f, i){
+      var code = getCode(f);
+      var path = enc(c.bigmFolder+'/'+qf+'/'+f);
+      return '<a class="std-item" href="'+path+'" target="_blank">'
+        + '<div class="std-num" style="background:'+clr+'">'+(i+1)+'</div>'
+        + '<div><div class="std-code">'+code+'</div><div class="std-title">'+(PTITLES[code]||code)+'</div></div>'
+        + '<span class="std-arrow">↗</span></a>';
+    }).join('');
+  } else {
+    var weeks = [], base = Math.floor(files.length/8), extra = files.length%8, idx = 0;
+    for (var w = 0; w < 8; w++) {
+      var cnt = base + (w < extra ? 1 : 0);
+      weeks.push(files.slice(idx, idx+cnt));
+      idx += cnt;
+    }
+    area.className = '';
+    area.innerHTML = weeks.map(function(wf, wi){
+      if (!wf.length) return '';
+      var stds = wf.map(function(f){
+        var code = getCode(f);
+        return '<div class="week-std">'
+          +'<div class="wstd-dot" style="background:'+clr+'"></div>'
+          +'<div><div class="wstd-code">'+code+'</div><div class="wstd-title">'+(PTITLES[code]||code)+'</div></div>'
+          +'</div>';
+      }).join('');
+      return '<div class="week-block">'
+        +'<button class="week-head" onclick="toggleWeek(this)">'
+        +'<span class="week-label">Week '+(wi+1)+'</span>'
+        +'<span class="week-count">'+wf.length+' standard'+(wf.length>1?'s':'')+'</span>'
+        +'<span class="week-chev">▾</span></button>'
+        +'<div class="week-body open"><div>'+stds+'</div></div>'
+        +'</div>';
+    }).join('')
+    +'<div class="exam-row"><span class="exam-label">Week 9</span><span class="exam-tag">📝 Exam Week</span></div>';
+  }
+}
+
+function toggleWeek(btn) {
+  var body = btn.nextElementSibling;
+  var open = body.classList.toggle('open');
+  btn.classList.toggle('collapsed', !open);
+}
+</script>
+</body>
+</html>
