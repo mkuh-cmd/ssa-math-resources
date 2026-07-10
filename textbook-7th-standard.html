@@ -42,6 +42,18 @@
   .unit-links a:last-child { border-bottom: none; }
   .unit-links a:hover { color: #c0392b; }
 
+  /* Practice two-column split inside each unit card */
+  .practice-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .practice-col { padding: 8px 12px 12px; }
+  .practice-col:first-child { border-right: 1px solid #eee; }
+  .practice-col-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 6px; }
+  .practice-col a {
+    display: block; padding: 4px 0; color: #1a3a6b;
+    text-decoration: none; font-size: 0.8rem; border-bottom: 1px solid #f0f0f0;
+  }
+  .practice-col a:last-child { border-bottom: none; }
+  .practice-col a:hover { color: #c0392b; }
+
   /* Assessments */
   .assess-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
   @media(max-width:700px){ .assess-grid { grid-template-columns: 1fr; } }
@@ -115,21 +127,32 @@ buildGrid('student-grid', '2. Student Pages', (u,l) => `Unit ${u}.${l}.pdf`, '�
 // Teacher Pages
 buildGrid('teacher-grid', '3. Teacher Pages', (u,l) => `Lesson ${u}.${l} [T].pdf`, '📄', false);
 
-// Practice Pages (Blank + Key per lesson)
+// Practice Pages — Blank | Key split columns
 (function buildPractice() {
   const grid = document.getElementById('practice-grid');
   for (let u = 1; u <= 13; u++) {
     const count = unitLessons[u];
-    let links = '';
+    let blanks = '', keys = '';
     for (let l = 1; l <= count; l++) {
-      const blank = `Lesson ${u}.${l} [P].pdf`;
-      const key   = `Lesson ${u}.${l} [P.K].pdf`;
-      const blankUrl = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e(blank)}`;
-      const keyUrl   = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e(key)}`;
-      links += `<a href="${blankUrl}" target="_blank">📄 Lesson ${u}.${l} — Blank</a>`;
-      links += `<a href="${keyUrl}"   target="_blank">✅ Lesson ${u}.${l} — Key</a>`;
+      const blankFile = `Lesson ${u}.${l} [P].pdf`;
+      const keyFile   = `Lesson ${u}.${l} [P.K].pdf`;
+      const blankUrl  = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e(blankFile)}`;
+      const keyUrl    = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e(keyFile)}`;
+      blanks += `<a href="${blankUrl}" target="_blank">📄 Lesson ${u}.${l}</a>`;
+      keys   += `<a href="${keyUrl}"   target="_blank">✅ Lesson ${u}.${l}</a>`;
     }
-    grid.innerHTML += `<div class="unit-card"><div class="unit-header">Unit ${u}</div><div class="unit-links">${links}</div></div>`;
+    grid.innerHTML += `
+      <div class="unit-card">
+        <div class="unit-header">Unit ${u}</div>
+        <div class="practice-cols">
+          <div class="practice-col">
+            <div class="practice-col-label">Blank</div>${blanks}
+          </div>
+          <div class="practice-col">
+            <div class="practice-col-label">Key</div>${keys}
+          </div>
+        </div>
+      </div>`;
   }
 })();
 
