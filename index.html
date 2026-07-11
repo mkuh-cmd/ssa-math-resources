@@ -602,14 +602,15 @@ function pickResource(type) {
 
   else if (type === 'textbook') {
     var tbLinks = {
-      g7: 'textbook-7th-standard.html'
+      g7:   { url: 'textbook-7th-standard.html', note: 'Available — 13 Units' },
+      gr6:  { url: 'textbook-ramp6.html',         note: 'Available — Presentation Slides · Q1' }
     };
-    var tbUrl = tbLinks[c.id];
-    if (tbUrl) {
+    var tb = tbLinks[c.id];
+    if (tb) {
       content.innerHTML =
         '<div class="ixl-block">'
-        + '<a class="ixl-open-btn" style="background:'+clr+'" href="'+tbUrl+'" target="_blank">📖&nbsp; Open Textbook Curriculum</a>'
-        + '<span class="ixl-status"><span class="status-dot complete"></span>Available — 13 Units</span>'
+        + '<a class="ixl-open-btn" style="background:'+clr+'" href="'+tb.url+'" target="_blank">📖&nbsp; Open Textbook Curriculum</a>'
+        + '<span class="ixl-status"><span class="status-dot complete"></span>'+tb.note+'</span>'
         + '</div>';
     } else {
       content.innerHTML = '<p class="empty">Textbook curriculum for this course is not yet available.<br>Check back as materials are added.</p>';
