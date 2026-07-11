@@ -10,15 +10,16 @@
 
   header { background: #1a3a6b; color: white; padding: 24px 32px; }
   header h1 { font-size: 1.6rem; font-weight: 700; }
-  header p { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
+  header p  { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
 
+  /* ── Tabs ── */
   .tabs {
     display: flex; gap: 2px; background: #13305c;
     padding: 0 24px; overflow-x: auto;
   }
   .tab-btn {
     background: none; border: none; color: rgba(255,255,255,0.7);
-    padding: 12px 16px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+    padding: 12px 20px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
     white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s;
   }
   .tab-btn:hover { color: white; }
@@ -27,35 +28,85 @@
   .content { max-width: 1100px; margin: 0 auto; padding: 24px; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
-  .section-label { font-size: 0.78rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .section-label { font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
 
-  .unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-
-  .unit-card { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
-  .unit-header { background: #1a3a6b; color: white; padding: 9px 14px; font-weight: 700; font-size: 0.9rem; }
-  .unit-links { padding: 8px 14px 12px; }
-  .unit-links a {
-    display: flex; align-items: center; gap: 7px;
-    padding: 5px 0; color: #1a3a6b; text-decoration: none;
-    font-size: 0.82rem; border-bottom: 1px solid #eee;
+  /* ── Unit quick-nav ── */
+  .unit-nav {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 20px;
   }
-  .unit-links a:last-child { border-bottom: none; }
-  .unit-links a:hover { color: #c0392b; }
-
-  /* Practice two-column split inside each unit card */
-  .practice-cols { display: grid; grid-template-columns: 1fr 1fr; }
-  .practice-col { padding: 8px 12px 12px; }
-  .practice-col:first-child { border-right: 1px solid #eee; }
-  .practice-col-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 6px; }
-  .practice-col a {
-    display: block; padding: 4px 0; color: #1a3a6b;
-    text-decoration: none; font-size: 0.8rem; border-bottom: 1px solid #f0f0f0;
+  .unit-nav-btn {
+    padding: 5px 12px; border: 2px solid #1a3a6b; border-radius: 20px;
+    background: none; color: #1a3a6b; font-weight: 700; font-size: 0.78rem;
+    cursor: pointer; transition: all 0.15s;
   }
-  .practice-col a:last-child { border-bottom: none; }
-  .practice-col a:hover { color: #c0392b; }
+  .unit-nav-btn:hover { background: #1a3a6b; color: white; }
 
-  /* Skills Practice */
-  .sp-q-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+  /* ── Unit card (Tab 1) ── */
+  .unit-card {
+    background: white; border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    overflow: hidden; margin-bottom: 14px;
+    scroll-margin-top: 20px;
+  }
+  .unit-heading {
+    background: #1a3a6b; color: white;
+    padding: 10px 16px; font-weight: 700; font-size: 0.95rem;
+  }
+
+  /* Lesson resource table */
+  .res-table { width: 100%; border-collapse: collapse; }
+  .res-table thead tr {
+    background: #f0f4ff; border-bottom: 2px solid #dde4f0;
+  }
+  .res-table thead th {
+    padding: 7px 10px; font-size: 0.72rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.05em; color: #555;
+    text-align: center;
+  }
+  .res-table thead th:first-child { text-align: left; padding-left: 16px; }
+  .res-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+  .res-table tbody tr:last-child { border-bottom: none; }
+  .res-table tbody tr:hover { background: #fafbff; }
+  .res-table td {
+    padding: 6px 10px; text-align: center; vertical-align: middle;
+  }
+  .res-table td:first-child {
+    text-align: left; padding-left: 16px;
+    font-size: 0.82rem; font-weight: 600; color: #555;
+    white-space: nowrap;
+  }
+
+  /* Resource link pills */
+  .res-link {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 3px 9px; border-radius: 12px;
+    font-size: 0.75rem; font-weight: 600;
+    text-decoration: none; transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .res-link:hover { opacity: 0.75; }
+  .lnk-slide   { background: #dbeafe; color: #1d4ed8; }
+  .lnk-student { background: #dcfce7; color: #15803d; }
+  .lnk-teacher { background: #fef3c7; color: #92400e; }
+  .lnk-blank   { background: #f3e8ff; color: #7c3aed; }
+  .lnk-key     { background: #fee2e2; color: #b91c1c; }
+
+  /* ── Assessments ── */
+  .assess-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media(max-width:700px){ .assess-grid { grid-template-columns: 1fr; } }
+  .assess-col { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
+  .assess-header { padding: 9px 14px; font-weight: 700; font-size: 0.88rem; color: white; }
+  .blank-h  { background: #2c3e50; }
+  .key-h    { background: #27ae60; }
+  .guide-h  { background: #8e44ad; }
+  .assess-links { padding: 8px 14px 12px; }
+  .assess-links a { display: block; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
+  .assess-links a:last-child { border-bottom: none; }
+  .assess-links a:hover { color: #27ae60; }
+
+  /* ── Skills Practice ── */
+  .sp-q-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
   .sp-q-btn {
     padding: 7px 18px; border: 2px solid #1a3a6b; border-radius: 20px;
     background: none; color: #1a3a6b; font-weight: 700; font-size: 0.82rem;
@@ -75,24 +126,13 @@
   .sp-file-item:last-child { border-bottom: none; }
   .sp-file-item:hover { background: #f0f4ff; color: #c0392b; }
   .sp-num { font-size: 0.7rem; font-weight: 800; color: #bbb; min-width: 22px; text-align: right; }
-  .sp-badge {
-    margin-left: auto; font-size: 0.67rem; font-weight: 800;
-    background: #e8edf5; color: #1a3a6b; padding: 2px 7px; border-radius: 20px;
-  }
+  .sp-badge { margin-left: auto; font-size: 0.67rem; font-weight: 800; background: #e8edf5; color: #1a3a6b; padding: 2px 7px; border-radius: 20px; }
   .sp-coming { text-align: center; padding: 48px 20px; color: #aaa; font-size: 0.9rem; }
 
-  /* Assessments */
-  .assess-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  @media(max-width:700px){ .assess-grid { grid-template-columns: 1fr; } }
-  .assess-col { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
-  .assess-header { padding: 9px 14px; font-weight: 700; font-size: 0.88rem; color: white; }
-  .blank-h { background: #2c3e50; }
-  .key-h   { background: #27ae60; }
-  .guide-h { background: #8e44ad; }
-  .assess-links { padding: 8px 14px 12px; }
-  .assess-links a { display: block; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
-  .assess-links a:last-child { border-bottom: none; }
-  .assess-links a:hover { color: #27ae60; }
+  @media(max-width:600px){
+    .res-table thead th:nth-child(n+3) { display: none; }
+    .res-table td:nth-child(n+3) { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -103,20 +143,27 @@
 </header>
 
 <nav class="tabs">
-  <button class="tab-btn active"  onclick="showTab('slides',this)">📊 Presentation Slides</button>
-  <button class="tab-btn"         onclick="showTab('student',this)">📄 Student Pages</button>
-  <button class="tab-btn"         onclick="showTab('teacher',this)">👩‍🏫 Teacher Pages</button>
-  <button class="tab-btn"         onclick="showTab('practice',this)">✏️ Practice Pages</button>
-  <button class="tab-btn"         onclick="showTab('assess',this)">📝 Assessments</button>
-  <button class="tab-btn"         onclick="showTab('sp',this)">✏️ Skills Practice</button>
+  <button class="tab-btn active" onclick="showTab('units',this)">📚 Unit Resources</button>
+  <button class="tab-btn"        onclick="showTab('assess',this)">📝 Assessments</button>
+  <button class="tab-btn"        onclick="showTab('sp',this)">✏️ Skills Practice</button>
 </nav>
 
 <div class="content">
-  <div id="tab-slides"  class="tab-panel active"><p class="section-label">Presentation Slides (.pptx) — click to download</p><div class="unit-grid" id="slides-grid"></div></div>
-  <div id="tab-student" class="tab-panel"><p class="section-label">Student Pages (.pdf)</p><div class="unit-grid" id="student-grid"></div></div>
-  <div id="tab-teacher" class="tab-panel"><p class="section-label">Teacher Pages (.pdf)</p><div class="unit-grid" id="teacher-grid"></div></div>
-  <div id="tab-practice" class="tab-panel"><p class="section-label">Practice Pages by Lesson</p><div class="unit-grid" id="practice-grid"></div></div>
-  <div id="tab-assess"  class="tab-panel"><p class="section-label">Unit Assessments</p><div class="assess-grid" id="assess-grid"></div></div>
+
+  <!-- ── TAB 1: Unit Resources ── -->
+  <div id="tab-units" class="tab-panel active">
+    <p class="section-label">All lesson resources by unit — Slides · Student · Teacher · Practice (Blank &amp; Key)</p>
+    <div class="unit-nav" id="unit-nav"></div>
+    <div id="units-container"></div>
+  </div>
+
+  <!-- ── TAB 2: Assessments ── -->
+  <div id="tab-assess" class="tab-panel">
+    <p class="section-label">Unit Assessments</p>
+    <div class="assess-grid" id="assess-grid"></div>
+  </div>
+
+  <!-- ── TAB 3: Skills Practice ── -->
   <div id="tab-sp" class="tab-panel">
     <div class="sp-q-bar">
       <button class="sp-q-btn active" onclick="showSpQ('q1',this)">Quarter 1</button>
@@ -129,12 +176,12 @@
     <div id="sp-q3" class="sp-panel"><div class="sp-coming">📂 Quarter 3 materials will appear here as they are added.</div></div>
     <div id="sp-q4" class="sp-panel"><div class="sp-coming">📂 Quarter 4 materials will appear here as they are added.</div></div>
   </div>
+
 </div>
 
 <script>
 const BASE = "3.%20Textbook/4.%207th%20Standard";
 const e = encodeURIComponent;
-
 const unitLessons = {1:6,2:9,3:8,4:10,5:10,6:11,7:10,8:6,9:8,10:10,11:9,12:6,13:9};
 
 function showTab(name, btn) {
@@ -144,97 +191,79 @@ function showTab(name, btn) {
   btn.classList.add('active');
 }
 
-function buildGrid(gridId, section, filePattern, icon, download) {
-  const grid = document.getElementById(gridId);
+// ── TAB 1: Unit Resources ──
+(function buildUnits() {
+  const nav  = document.getElementById('unit-nav');
+  const wrap = document.getElementById('units-container');
+
   for (let u = 1; u <= 13; u++) {
     const count = unitLessons[u];
-    let links = '';
+
+    // Nav button
+    nav.innerHTML += `<button class="unit-nav-btn" onclick="document.getElementById('unit-${u}').scrollIntoView({behavior:'smooth'})">Unit ${u}</button>`;
+
+    // Build table rows
+    let rows = '';
     for (let l = 1; l <= count; l++) {
-      const file = filePattern(u, l);
-      const url = `${BASE}/${e(section)}/${e('Unit '+u)}/${e(file)}`;
-      links += `<a href="${url}" ${download?'download':' target="_blank"'}>${icon} ${file}</a>`;
+      const slideUrl   = `${BASE}/${e('1. Presentation Slide')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pptx')}`;
+      const studentUrl = `${BASE}/${e('2. Student Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`;
+      const teacherUrl = `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [T].pdf')}`;
+      const blankUrl   = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P].pdf')}`;
+      const keyUrl     = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P.K].pdf')}`;
+
+      rows += `<tr>
+        <td>${u}.${l}</td>
+        <td><a class="res-link lnk-slide"   href="${slideUrl}"   download>📊 Slide</a></td>
+        <td><a class="res-link lnk-student" href="${studentUrl}" target="_blank">📄 Student</a></td>
+        <td><a class="res-link lnk-teacher" href="${teacherUrl}" target="_blank">📄 Teacher</a></td>
+        <td><a class="res-link lnk-blank"   href="${blankUrl}"   target="_blank">📋 Blank</a></td>
+        <td><a class="res-link lnk-key"     href="${keyUrl}"     target="_blank">✅ Key</a></td>
+      </tr>`;
     }
-    grid.innerHTML += `<div class="unit-card"><div class="unit-header">Unit ${u}</div><div class="unit-links">${links}</div></div>`;
-  }
-}
 
-// Presentation Slides
-buildGrid('slides-grid', '1. Presentation Slide', (u,l) => `Unit ${u}.${l}.pptx`, '📊', true);
-
-// Student Pages
-buildGrid('student-grid', '2. Student Pages', (u,l) => `Unit ${u}.${l}.pdf`, '📄', false);
-
-// Teacher Pages
-buildGrid('teacher-grid', '3. Teacher Pages', (u,l) => `Lesson ${u}.${l} [T].pdf`, '📄', false);
-
-// Practice Pages — Blank | Key split columns
-(function buildPractice() {
-  const grid = document.getElementById('practice-grid');
-  for (let u = 1; u <= 13; u++) {
-    const count = unitLessons[u];
-    let blanks = '', keys = '';
-    for (let l = 1; l <= count; l++) {
-      const blankFile = `Lesson ${u}.${l} [P].pdf`;
-      const keyFile   = `Lesson ${u}.${l} [P.K].pdf`;
-      const blankUrl  = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e(blankFile)}`;
-      const keyUrl    = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e(keyFile)}`;
-      blanks += `<a href="${blankUrl}" target="_blank">📄 Lesson ${u}.${l}</a>`;
-      keys   += `<a href="${keyUrl}"   target="_blank">✅ Lesson ${u}.${l}</a>`;
-    }
-    grid.innerHTML += `
-      <div class="unit-card">
-        <div class="unit-header">Unit ${u}</div>
-        <div class="practice-cols">
-          <div class="practice-col">
-            <div class="practice-col-label">Blank</div>${blanks}
-          </div>
-          <div class="practice-col">
-            <div class="practice-col-label">Key</div>${keys}
-          </div>
-        </div>
+    wrap.innerHTML += `
+      <div class="unit-card" id="unit-${u}">
+        <div class="unit-heading">Unit ${u}</div>
+        <table class="res-table">
+          <thead><tr>
+            <th>Lesson</th>
+            <th>📊 Slide</th>
+            <th>📄 Student</th>
+            <th>📄 Teacher</th>
+            <th>📋 Practice</th>
+            <th>✅ Key</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
       </div>`;
   }
 })();
 
-// Assessments
+// ── TAB 2: Assessments ──
 (function buildAssess() {
   const grid = document.getElementById('assess-grid');
   const AD = `${BASE}/${e('5. Unit Assessments')}`;
 
   const blanks = [
-    "Unit 1 Assessment[blank].pdf",
-    "Unit 2 Assessment[blank].pdf",
-    "Unit 3A - Part 1 Assessment[blank].pdf",
-    "Unit 3B - Part 1 Assessment[blank].pdf",
-    "Unit 3C - Part 1 Assessment[blank].pdf",
-    "Unit 3 - Part 2 Assessment[blank].pdf",
+    "Unit 1 Assessment[blank].pdf","Unit 2 Assessment[blank].pdf",
+    "Unit 3A - Part 1 Assessment[blank].pdf","Unit 3B - Part 1 Assessment[blank].pdf",
+    "Unit 3C - Part 1 Assessment[blank].pdf","Unit 3 - Part 2 Assessment[blank].pdf",
     "Unit 4 Assessment[blank].pdf","Unit 5 Assessment[blank].pdf",
     "Unit 6 Assessment[blank].pdf","Unit 7 Assessment[blank].pdf",
     "Unit 8 Assessment[blank].pdf","Unit 9 Assessment[blank].pdf",
     "Unit 10 Assessment[blank].pdf","Unit 11 Assessment[blank].pdf",
     "Unit 12 Assessment[blank].pdf","Unit 13 Assessment[blank].pdf"
   ];
-  const blankLinks = blanks.map(f =>
-    `<a href="${AD}/${e('1. Blank')}/${e(f)}" target="_blank">📄 ${f.replace('[blank]','').trim()}</a>`
-  ).join('');
-
   const keys = [
-    "Unit 1 Assessment [Key].pdf",
-    "Unit 2 Assessment [Key].pdf",
-    "Unit 3A - Part 1 Assessment[Key].pdf",
-    "Unit 3B - Part 1 Assessment[Key].pdf",
-    "Unit 3C - Part 1 Assessment[Key].pdf",
-    "Unit 3 - Part 2 Assessment[Key].pdf",
+    "Unit 1 Assessment [Key].pdf","Unit 2 Assessment [Key].pdf",
+    "Unit 3A - Part 1 Assessment[Key].pdf","Unit 3B - Part 1 Assessment[Key].pdf",
+    "Unit 3C - Part 1 Assessment[Key].pdf","Unit 3 - Part 2 Assessment[Key].pdf",
     "Unit 4 Assessment [Key].pdf","Unit 5 Assessment [Key].pdf",
     "Unit 6 Assessment [Key].pdf","Unit 7 Assessment [Key].pdf",
     "Unit 8 Assessment [Key].pdf","Unit 9 Assessment [Key].pdf",
     "Unit 10 Assessment [Key].pdf","Unit 11 Assessment [Key].pdf",
     "Unit 12 Assessment [Key].pdf","Unit 13 Assessment [Key].pdf"
   ];
-  const keyLinks = keys.map(f =>
-    `<a href="${AD}/${e('2. Key')}/${e(f)}" target="_blank">✅ ${f.replace('[Key]','Key').replace(/\s+/g,' ').trim()}</a>`
-  ).join('');
-
   const guides = [
     "Unit 1 Assessment [Guide].pdf","Unit 2 Assessment [Guide].pdf",
     "Unit 3 - Part 1 Assessment [Guide].pdf","Unit 3 - Part 2 Assessment [Guide].pdf",
@@ -244,9 +273,10 @@ buildGrid('teacher-grid', '3. Teacher Pages', (u,l) => `Lesson ${u}.${l} [T].pdf
     "Unit 10 Assessment [Guide].pdf","Unit 11 Assessment [Guide].pdf",
     "Unit 12 Assessment [Guide].pdf","Unit 13 Assessment [Guide].pdf"
   ];
-  const guideLinks = guides.map(f =>
-    `<a href="${AD}/${e('3. Guide')}/${e(f)}" target="_blank">📋 ${f.replace('[Guide]','Guide').trim()}</a>`
-  ).join('');
+
+  const blankLinks  = blanks.map(f  => `<a href="${AD}/${e('1. Blank')}/${e(f)}"  target="_blank">📄 ${f.replace('[blank]','').trim()}</a>`).join('');
+  const keyLinks    = keys.map(f    => `<a href="${AD}/${e('2. Key')}/${e(f)}"    target="_blank">✅ ${f.replace('[Key]','Key').replace(/\s+/g,' ').trim()}</a>`).join('');
+  const guideLinks  = guides.map(f  => `<a href="${AD}/${e('3. Guide')}/${e(f)}"  target="_blank">📋 ${f.replace('[Guide]','Guide').trim()}</a>`).join('');
 
   grid.innerHTML = `
     <div class="assess-col"><div class="assess-header blank-h">📝 Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>
@@ -254,7 +284,7 @@ buildGrid('teacher-grid', '3. Teacher Pages', (u,l) => `Lesson ${u}.${l} [T].pdf
     <div class="assess-col"><div class="assess-header guide-h">📋 Assessment Guides</div><div class="assess-links">${guideLinks}</div></div>`;
 })();
 
-// Skills Practice
+// ── TAB 3: Skills Practice ──
 const SP_BASE = "4.%20Skills%20Practice";
 
 function showSpQ(q, btn) {
@@ -266,25 +296,11 @@ function showSpQ(q, btn) {
 
 (function buildSP() {
   const q1Files = [
-    "1. SP 2.3.pdf",
-    "2. SP 2,4.pdf",
-    "3. SP 2.1.pdf",
-    "4. SP 2.2.pdf",
-    "5. SP 2.5.pdf",
-    "6. SP 2.6.pdf",
-    "7. SP 2.7.pdf",
-    "8. SP 2.8.pdf",
-    "9. SP 2.9.pdf",
-    "10. SP 3.1.pdf",
-    "11. SP 3.2.pdf",
-    "12. SP 3.3.pdf",
-    "13. SP 3.4.pdf",
-    "14. SP 3.5.pdf",
-    "15. SP 3.6.pdf",
-    "16. SP 3.7.pdf",
-    "17. SP 3.8.pdf"
+    "1. SP 2.3.pdf","2. SP 2,4.pdf","3. SP 2.1.pdf","4. SP 2.2.pdf",
+    "5. SP 2.5.pdf","6. SP 2.6.pdf","7. SP 2.7.pdf","8. SP 2.8.pdf",
+    "9. SP 2.9.pdf","10. SP 3.1.pdf","11. SP 3.2.pdf","12. SP 3.3.pdf",
+    "13. SP 3.4.pdf","14. SP 3.5.pdf","15. SP 3.6.pdf","16. SP 3.7.pdf","17. SP 3.8.pdf"
   ];
-
   const list = document.getElementById('sp-q1-list');
   q1Files.forEach((filename, idx) => {
     const label = filename.replace(/^\d+\.\s*/, '').replace('.pdf', '');
@@ -296,13 +312,6 @@ function showSpQ(q, btn) {
       <span class="sp-badge">SP</span>
     </a>`;
   });
-
-  /* To add Quarter 2 later:
-     1. Drop files in: 4. Skills Practice/7th Grade Standard/Quarter 2/
-     2. Add a q2Files array here with the filenames
-     3. Build into sp-q2-list the same way
-     4. Replace the "coming soon" div in sp-q2 with <div class="sp-file-list" id="sp-q2-list"></div>
-  */
 })();
 </script>
 </body>
