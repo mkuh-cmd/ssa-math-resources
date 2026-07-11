@@ -54,6 +54,33 @@
   .practice-col a:last-child { border-bottom: none; }
   .practice-col a:hover { color: #c0392b; }
 
+  /* Skills Practice */
+  .sp-q-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+  .sp-q-btn {
+    padding: 7px 18px; border: 2px solid #1a3a6b; border-radius: 20px;
+    background: none; color: #1a3a6b; font-weight: 700; font-size: 0.82rem;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .sp-q-btn.active { background: #1a3a6b; color: white; }
+  .sp-q-btn:hover:not(.active) { background: #e8edf5; }
+  .sp-panel { display: none; }
+  .sp-panel.active { display: block; }
+  .sp-file-list { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
+  .sp-file-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
+    text-decoration: none; color: #1a3a6b; font-size: 0.85rem; font-weight: 500;
+    transition: background 0.12s;
+  }
+  .sp-file-item:last-child { border-bottom: none; }
+  .sp-file-item:hover { background: #f0f4ff; color: #c0392b; }
+  .sp-num { font-size: 0.7rem; font-weight: 800; color: #bbb; min-width: 22px; text-align: right; }
+  .sp-badge {
+    margin-left: auto; font-size: 0.67rem; font-weight: 800;
+    background: #e8edf5; color: #1a3a6b; padding: 2px 7px; border-radius: 20px;
+  }
+  .sp-coming { text-align: center; padding: 48px 20px; color: #aaa; font-size: 0.9rem; }
+
   /* Assessments */
   .assess-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
   @media(max-width:700px){ .assess-grid { grid-template-columns: 1fr; } }
@@ -81,6 +108,7 @@
   <button class="tab-btn"         onclick="showTab('teacher',this)">👩‍🏫 Teacher Pages</button>
   <button class="tab-btn"         onclick="showTab('practice',this)">✏️ Practice Pages</button>
   <button class="tab-btn"         onclick="showTab('assess',this)">📝 Assessments</button>
+  <button class="tab-btn"         onclick="showTab('sp',this)">✏️ Skills Practice</button>
 </nav>
 
 <div class="content">
@@ -89,6 +117,18 @@
   <div id="tab-teacher" class="tab-panel"><p class="section-label">Teacher Pages (.pdf)</p><div class="unit-grid" id="teacher-grid"></div></div>
   <div id="tab-practice" class="tab-panel"><p class="section-label">Practice Pages by Lesson</p><div class="unit-grid" id="practice-grid"></div></div>
   <div id="tab-assess"  class="tab-panel"><p class="section-label">Unit Assessments</p><div class="assess-grid" id="assess-grid"></div></div>
+  <div id="tab-sp" class="tab-panel">
+    <div class="sp-q-bar">
+      <button class="sp-q-btn active" onclick="showSpQ('q1',this)">Quarter 1</button>
+      <button class="sp-q-btn"       onclick="showSpQ('q2',this)">Quarter 2</button>
+      <button class="sp-q-btn"       onclick="showSpQ('q3',this)">Quarter 3</button>
+      <button class="sp-q-btn"       onclick="showSpQ('q4',this)">Quarter 4</button>
+    </div>
+    <div id="sp-q1" class="sp-panel active"><div class="sp-file-list" id="sp-q1-list"></div></div>
+    <div id="sp-q2" class="sp-panel"><div class="sp-coming">📂 Quarter 2 materials will appear here as they are added.</div></div>
+    <div id="sp-q3" class="sp-panel"><div class="sp-coming">📂 Quarter 3 materials will appear here as they are added.</div></div>
+    <div id="sp-q4" class="sp-panel"><div class="sp-coming">📂 Quarter 4 materials will appear here as they are added.</div></div>
+  </div>
 </div>
 
 <script>
@@ -212,6 +252,57 @@ buildGrid('teacher-grid', '3. Teacher Pages', (u,l) => `Lesson ${u}.${l} [T].pdf
     <div class="assess-col"><div class="assess-header blank-h">📝 Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>
     <div class="assess-col"><div class="assess-header key-h">✅ Answer Keys</div><div class="assess-links">${keyLinks}</div></div>
     <div class="assess-col"><div class="assess-header guide-h">📋 Assessment Guides</div><div class="assess-links">${guideLinks}</div></div>`;
+})();
+
+// Skills Practice
+const SP_BASE = "4.%20Skills%20Practice";
+
+function showSpQ(q, btn) {
+  document.querySelectorAll('.sp-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sp-q-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sp-' + q).classList.add('active');
+  btn.classList.add('active');
+}
+
+(function buildSP() {
+  const q1Files = [
+    "1. SP 2.3.pdf",
+    "2. SP 2,4.pdf",
+    "3. SP 2.1.pdf",
+    "4. SP 2.2.pdf",
+    "5. SP 2.5.pdf",
+    "6. SP 2.6.pdf",
+    "7. SP 2.7.pdf",
+    "8. SP 2.8.pdf",
+    "9. SP 2.9.pdf",
+    "10. SP 3.1.pdf",
+    "11. SP 3.2.pdf",
+    "12. SP 3.3.pdf",
+    "13. SP 3.4.pdf",
+    "14. SP 3.5.pdf",
+    "15. SP 3.6.pdf",
+    "16. SP 3.7.pdf",
+    "17. SP 3.8.pdf"
+  ];
+
+  const list = document.getElementById('sp-q1-list');
+  q1Files.forEach((filename, idx) => {
+    const label = filename.replace(/^\d+\.\s*/, '').replace('.pdf', '');
+    const url = `${SP_BASE}/${e('7th Grade Standard')}/${e('Quarter 1')}/${e(filename)}`;
+    list.innerHTML += `<a class="sp-file-item" href="${url}" target="_blank">
+      <span class="sp-num">${idx + 1}</span>
+      <span>📄</span>
+      <span>${label}</span>
+      <span class="sp-badge">SP</span>
+    </a>`;
+  });
+
+  /* To add Quarter 2 later:
+     1. Drop files in: 4. Skills Practice/7th Grade Standard/Quarter 2/
+     2. Add a q2Files array here with the filenames
+     3. Build into sp-q2-list the same way
+     4. Replace the "coming soon" div in sp-q2 with <div class="sp-file-list" id="sp-q2-list"></div>
+  */
 })();
 </script>
 </body>
