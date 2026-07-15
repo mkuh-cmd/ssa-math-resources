@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>7th Grade Standard Textbook — SSA Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #222; }
@@ -133,9 +136,40 @@
     .res-table thead th:nth-child(n+3) { display: none; }
     .res-table td:nth-child(n+3) { display: none; }
   }
+
+  /* ═══ REDESIGN LAYER — SSA brand: deep navy + gold · Lexend/Inter ═══ */
+  body { font-family:'Inter','Segoe UI',Arial,sans-serif; background:#f4f6f8; color:#182236; display:flex; flex-direction:column; min-height:100vh; }
+  .topbar { position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:12px; padding:12px 22px; background:linear-gradient(90deg,#0c2244,#16335f); box-shadow:0 2px 14px rgba(12,34,68,0.25); }
+  .brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark { width:34px; height:34px; border-radius:9px; background:#f4b942; color:#0c2244; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .brand-mark svg { width:20px; height:20px; }
+  .brand-name { font-family:'Lexend',sans-serif; font-weight:700; font-size:0.95rem; color:#fff; letter-spacing:-0.2px; }
+  .brand-sub { font-size:0.62rem; color:rgba(255,255,255,0.55); letter-spacing:1.4px; text-transform:uppercase; font-weight:600; display:block; margin-top:1px; }
+  .back-hub { margin-left:auto; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; font:600 0.8rem/1 'Inter',sans-serif; color:#f4b942; text-decoration:none; transition:background 0.15s; }
+  .back-hub:hover { background:rgba(255,255,255,0.1); }
+  header { background:linear-gradient(120deg,#0c2244,#16335f); }
+  header h1 { font-family:'Lexend',sans-serif; letter-spacing:-0.4px; }
+  .tabs { background:#0a1d3a; }
+  .tab-btn.active { color:#f4b942; border-bottom-color:#f4b942; }
+  .unit-heading { background:linear-gradient(90deg,#0c2244,#16335f); font-family:'Lexend',sans-serif; }
+  .unit-nav-btn, .sp-q-btn { border-color:#0c2244; color:#0c2244; }
+  .unit-nav-btn:hover, .sp-q-btn.active { background:#0c2244; color:#fff; }
+  .content { flex:1; width:100%; }
+  .site-footer { margin-top:auto; padding:24px 24px 28px; background:#0c2244; text-align:center; }
+  .site-footer .foot-brand { font-family:'Lexend',sans-serif; font-weight:700; color:#fff; font-size:0.85rem; }
+  .site-footer .foot-line { color:rgba(255,255,255,0.55); font-size:0.75rem; margin-top:4px; }
+  @media (max-width:480px){ .brand-sub{display:none;} }
 </style>
 </head>
 <body>
+
+<nav class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></span>
+    <span><span class="brand-name">SSA Math Hub</span><span class="brand-sub">South Seminole Academy</span></span>
+  </a>
+  <a class="back-hub" href="index.html">← Back to Hub</a>
+</nav>
 
 <header>
   <h1>7th Grade Standard — Textbook Curriculum</h1>
@@ -143,9 +177,9 @@
 </header>
 
 <nav class="tabs">
-  <button class="tab-btn active" onclick="showTab('units',this)">📚 Unit Resources</button>
-  <button class="tab-btn"        onclick="showTab('assess',this)">📝 Assessments</button>
-  <button class="tab-btn"        onclick="showTab('sp',this)">✏️ Skills Practice</button>
+  <button class="tab-btn active" onclick="showTab('units',this)">Unit Resources</button>
+  <button class="tab-btn"        onclick="showTab('assess',this)">Assessments</button>
+  <button class="tab-btn"        onclick="showTab('sp',this)">Skills Practice</button>
 </nav>
 
 <div class="content">
@@ -172,12 +206,17 @@
       <button class="sp-q-btn"       onclick="showSpQ('q4',this)">Quarter 4</button>
     </div>
     <div id="sp-q1" class="sp-panel active"><div class="sp-file-list" id="sp-q1-list"></div></div>
-    <div id="sp-q2" class="sp-panel"><div class="sp-coming">📂 Quarter 2 materials will appear here as they are added.</div></div>
-    <div id="sp-q3" class="sp-panel"><div class="sp-coming">📂 Quarter 3 materials will appear here as they are added.</div></div>
-    <div id="sp-q4" class="sp-panel"><div class="sp-coming">📂 Quarter 4 materials will appear here as they are added.</div></div>
+    <div id="sp-q2" class="sp-panel"><div class="sp-coming">Quarter 2 materials will appear here as they are added.</div></div>
+    <div id="sp-q3" class="sp-panel"><div class="sp-coming">Quarter 3 materials will appear here as they are added.</div></div>
+    <div id="sp-q4" class="sp-panel"><div class="sp-coming">Quarter 4 materials will appear here as they are added.</div></div>
   </div>
 
 </div>
+
+<footer class="site-footer">
+  <div class="foot-brand">SSA Math Hub</div>
+  <div class="foot-line">South Seminole Academy · Math Department · 2026–27 School Year</div>
+</footer>
 
 <script>
 const BASE = "3.%20Textbook/4.%207th%20Standard";
@@ -213,11 +252,11 @@ function showTab(name, btn) {
 
       rows += `<tr>
         <td>${u}.${l}</td>
-        <td><a class="res-link lnk-slide"   href="${slideUrl}"   download>📊 Slide</a></td>
-        <td><a class="res-link lnk-student" href="${studentUrl}" target="_blank">📄 Student</a></td>
-        <td><a class="res-link lnk-teacher" href="${teacherUrl}" target="_blank">📄 Teacher</a></td>
-        <td><a class="res-link lnk-blank"   href="${blankUrl}"   target="_blank">📋 Blank</a></td>
-        <td><a class="res-link lnk-key"     href="${keyUrl}"     target="_blank">✅ Key</a></td>
+        <td><a class="res-link lnk-slide"   href="${slideUrl}"   download>Slide</a></td>
+        <td><a class="res-link lnk-student" href="${studentUrl}" target="_blank">Student</a></td>
+        <td><a class="res-link lnk-teacher" href="${teacherUrl}" target="_blank">Teacher</a></td>
+        <td><a class="res-link lnk-blank"   href="${blankUrl}"   target="_blank">Blank</a></td>
+        <td><a class="res-link lnk-key"     href="${keyUrl}"     target="_blank">Key</a></td>
       </tr>`;
     }
 
@@ -227,11 +266,11 @@ function showTab(name, btn) {
         <table class="res-table">
           <thead><tr>
             <th>Lesson</th>
-            <th>📊 Slide</th>
-            <th>📄 Student</th>
-            <th>📄 Teacher</th>
-            <th>📋 Practice</th>
-            <th>✅ Key</th>
+            <th>Slide</th>
+            <th>Student</th>
+            <th>Teacher</th>
+            <th>Practice</th>
+            <th>Key</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -274,14 +313,14 @@ function showTab(name, btn) {
     "Unit 12 Assessment [Guide].pdf","Unit 13 Assessment [Guide].pdf"
   ];
 
-  const blankLinks  = blanks.map(f  => `<a href="${AD}/${e('1. Blank')}/${e(f)}"  target="_blank">📄 ${f.replace('[blank]','').trim()}</a>`).join('');
-  const keyLinks    = keys.map(f    => `<a href="${AD}/${e('2. Key')}/${e(f)}"    target="_blank">✅ ${f.replace('[Key]','Key').replace(/\s+/g,' ').trim()}</a>`).join('');
-  const guideLinks  = guides.map(f  => `<a href="${AD}/${e('3. Guide')}/${e(f)}"  target="_blank">📋 ${f.replace('[Guide]','Guide').trim()}</a>`).join('');
+  const blankLinks  = blanks.map(f  => `<a href="${AD}/${e('1. Blank')}/${e(f)}"  target="_blank">${f.replace('[blank]','').replace('.pdf','').trim()}</a>`).join('');
+  const keyLinks    = keys.map(f    => `<a href="${AD}/${e('2. Key')}/${e(f)}"    target="_blank">${f.replace('[Key]','Key').replace('.pdf','').replace(/\s+/g,' ').trim()}</a>`).join('');
+  const guideLinks  = guides.map(f  => `<a href="${AD}/${e('3. Guide')}/${e(f)}"  target="_blank">${f.replace('[Guide]','Guide').replace('.pdf','').trim()}</a>`).join('');
 
   grid.innerHTML = `
-    <div class="assess-col"><div class="assess-header blank-h">📝 Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>
-    <div class="assess-col"><div class="assess-header key-h">✅ Answer Keys</div><div class="assess-links">${keyLinks}</div></div>
-    <div class="assess-col"><div class="assess-header guide-h">📋 Assessment Guides</div><div class="assess-links">${guideLinks}</div></div>`;
+    <div class="assess-col"><div class="assess-header blank-h">Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>
+    <div class="assess-col"><div class="assess-header key-h">Answer Keys</div><div class="assess-links">${keyLinks}</div></div>
+    <div class="assess-col"><div class="assess-header guide-h">Assessment Guides</div><div class="assess-links">${guideLinks}</div></div>`;
 })();
 
 // ── TAB 3: Skills Practice ──
@@ -307,7 +346,6 @@ function showSpQ(q, btn) {
     const url = `${SP_BASE}/${e('7th Grade Standard')}/${e('Quarter 1')}/${e(filename)}`;
     list.innerHTML += `<a class="sp-file-item" href="${url}" target="_blank">
       <span class="sp-num">${idx + 1}</span>
-      <span>📄</span>
       <span>${label}</span>
       <span class="sp-badge">SP</span>
     </a>`;
