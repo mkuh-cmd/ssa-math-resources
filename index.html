@@ -364,6 +364,95 @@ body {
 
 .empty { color: #94a3b8; font-size: 0.85rem; padding: 40px 20px; text-align: center; }
 
+/* ─── Department-wide (MTR) ─── */
+#dept-wide {
+  width: 100%; max-width: 420px;
+  display: flex; flex-direction: column; gap: 10px;
+  margin-top: 8px;
+}
+.dept-label {
+  font-size: 0.68rem; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #cbd5e1; text-align: center;
+}
+.mtr-home-card {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; padding: 18px 20px;
+  background: linear-gradient(135deg, #0f172a, #1e3a5f);
+  border: none; border-radius: 18px;
+  cursor: pointer; font-family: inherit; text-align: left;
+  transition: transform 0.18s var(--ease), box-shadow 0.18s;
+}
+.mtr-home-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(15,23,42,0.3); }
+.mtr-home-card:active { transform: none; }
+.mtr-home-icon { font-size: 1.5rem; flex-shrink: 0; }
+.mtr-home-name { font-size: 0.9rem; font-weight: 700; color: #fff; }
+.mtr-home-sub  { font-size: 0.7rem; color: #94a3b8; margin-top: 3px; line-height: 1.4; }
+.mtr-home-arrow { margin-left: auto; color: #475569; font-size: 0.9rem; flex-shrink: 0; }
+
+/* MTR page */
+.mtr-intro {
+  font-size: 0.85rem; color: #475569; line-height: 1.6;
+  background: #fff; border: 1px solid #f1f5f9; border-radius: 14px;
+  padding: 16px 18px; width: 100%; margin-bottom: 4px;
+}
+.mtr-card { background: #fff; border-radius: 16px; border: 1px solid #f1f5f9; overflow: hidden; width: 100%; }
+.mtr-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 15px 16px; cursor: pointer; border: none; background: none;
+  font-family: inherit; width: 100%; text-align: left; transition: background 0.15s;
+}
+.mtr-head:hover { background: #f8fafc; }
+.mtr-num {
+  width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; font-weight: 800; color: #fff;
+}
+.mtr-code  { font-size: 0.62rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; }
+.mtr-title { font-size: 0.85rem; font-weight: 700; color: #0f172a; line-height: 1.3; margin-top: 1px; }
+.mtr-chev  { margin-left: auto; font-size: 0.65rem; color: #cbd5e1; transition: transform 0.2s; flex-shrink: 0; }
+.mtr-head.open .mtr-chev { transform: rotate(180deg); }
+.mtr-body { display: none; padding: 0 16px 16px; }
+.mtr-body.open { display: block; }
+.mtr-sec-label {
+  font-size: 0.64rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; margin: 14px 0 6px;
+}
+.mtr-body ul { list-style: none; }
+.mtr-body li {
+  font-size: 0.8rem; color: #334155; line-height: 1.5;
+  padding: 3px 0 3px 16px; position: relative;
+}
+.mtr-body li::before { content: '•'; position: absolute; left: 2px; }
+.mtr-stem { font-style: italic; color: #475569; }
+.mtr-links { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.mtr-link-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 100px;
+  font-size: 0.72rem; font-weight: 700; text-decoration: none;
+  border: 1.5px solid #e2e8f0; color: #475569;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.mtr-link-btn:hover { border-color: currentColor; }
+.mtr-link-btn.solid { color: #fff; border: none; }
+
+/* FLDOE resources block */
+.fldoe-block {
+  width: 100%; background: #fff; border: 1px solid #f1f5f9;
+  border-radius: 16px; padding: 18px; margin-top: 18px;
+}
+.fldoe-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 12px; }
+.fldoe-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px; text-decoration: none;
+  transition: background 0.15s;
+}
+.fldoe-item:hover { background: #f8fafc; }
+.fldoe-item .fi-icon { font-size: 1rem; flex-shrink: 0; }
+.fldoe-item .fi-name { font-size: 0.82rem; font-weight: 700; color: #0f172a; }
+.fldoe-item .fi-sub  { font-size: 0.68rem; color: #94a3b8; margin-top: 1px; }
+.fldoe-item .fi-arrow { margin-left: auto; font-size: 0.72rem; color: #cbd5e1; }
+
 /* ─── Mobile ─── */
 @media (max-width: 480px) {
   .res-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -420,6 +509,19 @@ body {
         <span class="res-sub">Slides · Student &amp; Teacher Pages · Practice · Assessments · Skills Practice</span>
       </button>
     </div>
+  </div>
+
+  <!-- Department-wide: visible for every course -->
+  <div id="dept-wide">
+    <p class="dept-label">Department-Wide · All Courses</p>
+    <button class="mtr-home-card" onclick="openMTR()">
+      <span class="mtr-home-icon">🧠</span>
+      <span>
+        <span class="mtr-home-name">Mathematical Thinking &amp; Reasoning (MTR)</span>
+        <span class="mtr-home-sub" style="display:block">The 7 B.E.S.T. standards woven through every lesson · Teacher moves · Question stems · FLDOE resources</span>
+      </span>
+      <span class="mtr-home-arrow">→</span>
+    </button>
   </div>
 </div>
 
@@ -687,6 +789,118 @@ function toggleWeek(btn) {
   var body = btn.nextElementSibling;
   var open = body.classList.toggle('open');
   btn.classList.toggle('collapsed', !open);
+}
+
+/* ── MTR (Department-Wide) ──────────────────────────── */
+var MTR_FOLDER = 'Math Department Resources/02 - Mathematical Thinking & Reasoning (MTR)';
+var MTRS = [
+  { n:1, code:'MA.K12.MTR.1.1', color:'#e11d48', short:'Effortful Learning',
+    title:'Actively participate in effortful learning both individually and collectively.',
+    cpalms:'https://www.cpalms.org/PreviewStandard/Preview/15875',
+    students:['Analyze the problem in a way that makes sense given the task.','Ask questions that will help with solving the task.','Build perseverance by modifying methods as needed while solving a challenging task.','Stay engaged and maintain a positive mindset when working to solve tasks.','Help and support each other when attempting a new method or approach.'],
+    teachers:['Cultivate a community of growth mindset learners.','Foster perseverance in students by choosing tasks that are challenging.','Develop students’ ability to analyze and problem solve.','Recognize students’ effort when solving challenging problems.'],
+    stems:['“What have you tried so far? What could you try next?”','“What part of the problem makes sense to you?”','“What question could you ask that would help you move forward?”','“How did you keep going when it got hard?”'] },
+  { n:2, code:'MA.K12.MTR.2.1', color:'#7c3aed', short:'Multiple Representations',
+    title:'Demonstrate understanding by representing problems in multiple ways.',
+    cpalms:'https://www.cpalms.org/PreviewStandard/Preview/15876',
+    students:['Build understanding through modeling and using manipulatives.','Represent solutions to problems in multiple ways using objects, drawings, tables, graphs and equations.','Progress from modeling problems with objects and drawings to using algorithms and equations.','Express connections between concepts and representations.','Choose a representation based on the given context or purpose.'],
+    teachers:['Help students make connections between concepts and representations.','Provide opportunities for students to use manipulatives when investigating concepts.','Guide students from concrete to pictorial to abstract representations as understanding progresses.','Show students that various representations can have different purposes and can be useful in different situations.'],
+    stems:['“Can you show this another way — a table, a graph, a picture?”','“How does your drawing connect to your equation?”','“Which representation is most useful here? Why?”'] },
+  { n:3, code:'MA.K12.MTR.3.1', color:'#0891b2', short:'Fluency',
+    title:'Complete tasks with mathematical fluency.',
+    cpalms:'https://www.cpalms.org/PreviewStandard/Preview/15877',
+    students:['Select efficient and appropriate methods for solving problems within the given context.','Maintain flexibility and accuracy while performing procedures and mental calculations.','Complete tasks accurately and with confidence.','Adapt procedures to apply them to a new context.','Use feedback to improve efficiency when performing calculations.'],
+    teachers:['Provide students with the flexibility to solve problems by selecting a procedure that allows them to solve efficiently and accurately.','Offer multiple opportunities for students to practice efficient and generalizable methods.','Provide opportunities for students to reflect on the method they used and determine if a more efficient method could have been used.'],
+    stems:['“Is there a more efficient way to solve this?”','“Would your method still work if the numbers changed?”','“Which strategy did you choose, and why?”'] },
+  { n:4, code:'MA.K12.MTR.4.1', color:'#059669', short:'Math Discourse',
+    title:'Engage in discussions that reflect on the mathematical thinking of self and others.',
+    cpalms:'https://www.cpalms.org/PreviewStandard/Preview/15878',
+    students:['Communicate mathematical ideas, vocabulary and methods effectively.','Analyze the mathematical thinking of others.','Compare the efficiency of a method to those expressed by others.','Recognize errors and suggest how to correctly solve the task.','Justify results by explaining methods and processes.','Construct possible arguments based on evidence.'],
+    teachers:['Establish a culture in which students ask questions of the teacher and their peers, and error is an opportunity for learning.','Create opportunities for students to discuss their thinking with peers.','Select, sequence and present student work to advance and deepen understanding of correct and increasingly efficient methods.','Develop students’ ability to justify methods and compare their responses to the responses of their peers.'],
+    stems:['“Do you agree with their method? Why or why not?”','“Can you restate what your partner just said?”','“Whose strategy was more efficient? Defend your answer.”','“Where is the error, and how would you fix it?”'] },
+  { n:5, code:'MA.K12.MTR.5.1', color:'#d97706', short:'Patterns & Structure',
+    title:'Use patterns and structure to help understand and connect mathematical concepts.',
+    cpalms:'https://www.cpalms.org/PreviewStandard/Preview/15879',
+    students:['Focus on relevant details within a problem.','Create plans and procedures to logically order events, steps or ideas to solve problems.','Decompose a complex problem into manageable parts.','Relate previously learned concepts to new concepts.','Look for similarities among problems.','Connect solutions of problems to more complicated large-scale situations.'],
+    teachers:['Help students recognize the patterns in the world around them and connect these patterns to mathematical concepts.','Support students to develop generalizations based on the similarities found among problems.','Provide opportunities for students to create plans and procedures to solve problems.','Develop students’ ability to construct relationships between their current understanding and more sophisticated ways of thinking.'],
+    stems:['“What does this remind you of? What’s similar to problems we’ve done?”','“Can you break this into smaller parts?”','“What pattern do you notice? Will it always work?”'] },
+  { n:6, code:'MA.K12.MTR.6.1', color:'#dc2626', short:'Reasonableness',
+    title:'Assess the reasonableness of solutions.',
+    cpalms:'https://www.cpalms.org/PreviewStandard/Preview/15880',
+    students:['Estimate to discover possible solutions.','Use benchmark quantities to determine if a solution makes sense.','Check calculations when solving problems.','Verify possible solutions by explaining the methods used.','Evaluate results based on the given context.'],
+    teachers:['Have students estimate or predict solutions prior to solving.','Prompt students to continually ask, “Does this solution make sense? How do you know?”','Reinforce that students check their work as they progress within and after a task.','Strengthen students’ ability to verify solutions through justifications.'],
+    stems:['“Before you solve — estimate. What’s a reasonable answer?”','“Does your answer make sense in this context? How do you know?”','“What benchmark could you compare this to?”'] },
+  { n:7, code:'MA.K12.MTR.7.1', color:'#2563eb', short:'Real-World Contexts',
+    title:'Apply mathematics to real-world contexts.',
+    cpalms:'https://www.cpalms.org/PreviewStandard/Preview/15881',
+    students:['Connect mathematical concepts to everyday experiences.','Use models and methods to understand, represent and solve problems.','Perform investigations to gather data or determine if a method is appropriate.','Redesign models and methods to improve accuracy or efficiency.'],
+    teachers:['Provide opportunities for students to create models, both concrete and abstract, and perform investigations.','Challenge students to question the accuracy of their models and methods.','Support students as they validate conclusions by comparing them to the given situation.','Indicate how various concepts can be applied to other disciplines.'],
+    stems:['“Where would you see this math outside of school?”','“Does your model match the real situation?”','“How could you improve your model or method?”'] },
+];
+var FLDOE_LINKS = [
+  { icon:'📜', name:'Official MTR Standards (FLDOE)', sub:'Florida K-12 Mathematical Thinking and Reasoning Standards — full text & clarifications', url:'https://www.fldoe.org/core/fileparse.php/7576/urlt/Floridas-B.E.S.T.-Standards-for-Mathematics_MTRs.pdf' },
+  { icon:'🧭', name:'MTR Classroom Coaching Tool (FLDOE)', sub:'Walkthrough look-fors for each MTR — great for peer observations & PLCs', url:'https://www.fldoe.org/core/fileparse.php/7576/urlt/MTR-ClassroomCoachTool.pdf' },
+  { icon:'🏛️', name:'FLDOE B.E.S.T. Mathematics Page', sub:'Course descriptions, standards documents & implementation resources', url:'https://www.fldoe.org/academics/standards/subject-areas/math-science/mathematics/' },
+  { icon:'🔎', name:'CPALMS — B.E.S.T. Standards & Resources', sub:'Lesson plans, tasks & tutorials aligned to every MTR and benchmark', url:'https://www.cpalms.org/' },
+];
+
+function openMTR() {
+  document.getElementById('nav-back-btn').textContent = '← Home';
+  document.getElementById('nav-crumb').textContent = 'Mathematical Thinking & Reasoning';
+  document.getElementById('res-header').innerHTML =
+    '<div class="breadcrumb">Department-Wide · All Courses · Grades 6–8</div>'
+    + '<h2>Mathematical Thinking &amp; Reasoning</h2>';
+
+  var content = document.getElementById('res-content');
+  var cards = MTRS.map(function(m) {
+    var studentLis = m.students.map(function(s){ return '<li>'+s+'</li>'; }).join('');
+    var teacherLis = m.teachers.map(function(t){ return '<li>'+t+'</li>'; }).join('');
+    var stemLis    = m.stems.map(function(s){ return '<li class="mtr-stem">'+s+'</li>'; }).join('');
+    var pdfPath = enc(MTR_FOLDER + '/MTR ' + m.n + '.1 - ' + m.short.replace('&','and') + '.pdf');
+    return '<div class="mtr-card">'
+      + '<button class="mtr-head" onclick="toggleMtr(this)">'
+      +   '<span class="mtr-num" style="background:'+m.color+'">'+m.n+'</span>'
+      +   '<span><span class="mtr-code">'+m.code+'</span><br><span class="mtr-title">'+m.title+'</span></span>'
+      +   '<span class="mtr-chev">▾</span>'
+      + '</button>'
+      + '<div class="mtr-body">'
+      +   '<div class="mtr-sec-label" style="color:'+m.color+'">Students who master this…</div><ul>'+studentLis+'</ul>'
+      +   '<div class="mtr-sec-label" style="color:'+m.color+'">Teacher moves (FLDOE clarifications)</div><ul>'+teacherLis+'</ul>'
+      +   '<div class="mtr-sec-label" style="color:'+m.color+'">Question stems to use tomorrow</div><ul>'+stemLis+'</ul>'
+      +   '<div class="mtr-links">'
+      +     '<a class="mtr-link-btn solid" style="background:'+m.color+'" href="'+pdfPath+'" target="_blank">📄 Printable One-Pager</a>'
+      +     '<a class="mtr-link-btn" href="'+m.cpalms+'" target="_blank">🔗 CPALMS Standard Page</a>'
+      +   '</div>'
+      + '</div></div>';
+  }).join('');
+
+  var fldoe = '<div class="fldoe-block"><div class="fldoe-title">Florida DOE &amp; State Resources</div>'
+    + FLDOE_LINKS.map(function(l) {
+        return '<a class="fldoe-item" href="'+l.url+'" target="_blank">'
+          + '<span class="fi-icon">'+l.icon+'</span>'
+          + '<span><span class="fi-name">'+l.name+'</span><br><span class="fi-sub">'+l.sub+'</span></span>'
+          + '<span class="fi-arrow">↗</span></a>';
+      }).join('')
+    + '</div>';
+
+  content.innerHTML =
+    '<div class="mtr-intro"><strong>The MTRs are the "how" of every math lesson.</strong> '
+    + 'These seven standards apply to every course and every grade, K–12. They are not taught in isolation — '
+    + 'each content benchmark is paired with MTRs, and students should use them as self-monitoring tools. '
+    + 'Tap a standard below for classroom look-fors, teacher moves and ready-to-use question stems.</div>'
+    + cards + fldoe;
+
+  document.getElementById('home').style.display = 'none';
+  var rv = document.getElementById('resource-view');
+  rv.classList.add('active');
+  rv.scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function toggleMtr(btn) {
+  var body = btn.nextElementSibling;
+  var open = body.classList.toggle('open');
+  btn.classList.toggle('open', open);
 }
 </script>
 </body>
