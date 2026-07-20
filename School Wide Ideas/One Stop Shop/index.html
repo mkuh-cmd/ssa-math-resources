@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>One Stop Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #21262c;
+  --ink-soft: #5b6470;
+  --muted: #8b93a0;
+  --line: #e4e2dc;
+  --bg: #faf8f4;
+  --card: #ffffff;
+  --accent: #c65d3b;
+  --accent-dark: #a44a2d;
+  --accent-soft: #f3e3da;
+  --forest: #35594c;
+  --forest-soft: #e4ede9;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 14px;
+}
+
+body {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .brand-word { font-family: 'Sora', 'Manrope', sans-serif; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ─── Header ─── */
+header.hero {
+  background: linear-gradient(160deg, var(--forest) 0%, #274238 100%);
+  color: #fff;
+  padding: 44px 24px 88px;
+  text-align: center;
+  position: relative;
+}
+.hero-label {
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.hero-sub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.78);
+  max-width: 480px;
+  margin: 0 auto 26px;
+  line-height: 1.5;
+}
+.hero-folder-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 12px 22px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+  transition: transform 0.15s var(--ease), background 0.15s var(--ease);
+}
+.hero-folder-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+/* ─── Search bar (overlaps hero) ─── */
+.search-wrap {
+  max-width: 640px;
+  margin: -40px auto 0;
+  padding: 0 24px;
+  position: relative;
+  z-index: 5;
+}
+.search-box {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(33,38,44,0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+}
+.search-box svg { flex-shrink: 0; color: var(--muted); }
+.search-box input {
+  border: none;
+  outline: none;
+  font: 600 0.95rem 'Manrope', sans-serif;
+  color: var(--ink);
+  width: 100%;
+  background: transparent;
+}
+.search-box input::placeholder { color: var(--muted); font-weight: 500; }
+
+/* ─── Category pills ─── */
+.pill-row {
+  max-width: 900px;
+  margin: 22px auto 0;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.pill {
+  font: 700 0.78rem 'Manrope', sans-serif;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  white-space: nowrap;
+}
+.pill:hover { border-color: var(--accent); color: var(--accent-dark); }
+.pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ─── Main content ─── */
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 44px 24px 80px;
+}
+
+.category-section { margin-bottom: 42px; }
+.category-section.hidden { display: none; }
+
+.category-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--line);
+}
+.category-heading h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.category-count {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(33,38,44,0.10);
+  border-color: var(--accent);
+}
+.card-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-icon svg { width: 19px; height: 19px; }
+.card-body { flex: 1; min-width: 0; }
+.card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+  margin-bottom: 3px;
+}
+.card-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-state.hidden { display: none; }
+.empty-state h3 { font-size: 1.1rem; color: var(--ink-soft); margin-bottom: 6px; }
+
+/* ─── Footer ─── */
+footer {
+  text-align: center;
+  padding: 28px 24px 40px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+footer a { color: var(--accent-dark); font-weight: 700; }
+
+@media (max-width: 520px) {
+  header.hero { padding: 36px 18px 76px; }
+  .search-wrap { margin-top: -34px; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-label">South Seminole Academy</div>
+  <h1 class="hero-title">One Stop Shop</h1>
+  <p class="hero-sub">Everything staff need this year, all in one place — schedules, forms, PLC resources, testing folders, and more.</p>
+  <a class="hero-folder-btn" href="https://drive.google.com/drive/folders/1gOFFFPQ3H9nuzqQEKe6piU7Wi4CZkkew?usp=sharing" target="_blank" rel="noopener">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z"/></svg>
+    Open Master Drive Folder
+  </a>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="searchInput" type="text" placeholder="Search for a link, form, or resource…" autocomplete="off"/>
+  </div>
+</div>
+
+<div class="pill-row" id="pillRow">
+  <div class="pill active" data-cat="all">All</div>
+</div>
+
+<main>
+  <div id="sections"></div>
+  <div class="empty-state hidden" id="emptyState">
+    <h3>Nothing matches that search</h3>
+    <p>Try a different word, or clear the search box.</p>
+  </div>
+</main>
+
+<footer>
+  Missing a link, or something's out of date? Let your team lead know so it can be added or swapped here.
+</footer>
+
+<script>
+/* ── Single source of truth for every resource on this page. ──
+   To add/remove/replace a link during the year, just edit this array —
+   nothing else on the page needs to change. */
+const resources = [
+  // PrePlan Items
+  { category: "PrePlan Items", title: "PrePlan Schedule", url: "https://docs.google.com/document/d/1IpBN0HY2GiPXtdBpJC2psO4WdY1AhNW5WuheRM8p-EY/edit?usp=sharing" },
+  { category: "PrePlan Items", title: "Kickoff PPT", url: "https://docs.google.com/presentation/d/1XcAyttjOf1Z4VdWj05c136q8bWUaSjfC/edit?usp=sharing" },
+  { category: "PrePlan Items", title: "Common Board and Room Items", url: "https://docs.google.com/document/d/10V_9wYM0VKZuei5GlD6ebdokCBJHcoc9GE8sI8Bf_UM/edit?usp=sharing" },
+  { category: "PrePlan Items", title: "Leadership Jumpstart", url: "https://drive.google.com/drive/folders/1pGYI5nbZ4S56J1hlfptbdJyzFIG0ahQg?usp=sharing" },
+  { category: "PrePlan Items", title: "Master Calendar", url: "https://docs.google.com/document/d/1iu3LHPNREUmfjxak1JEDwH4t3btjE49oKVZrAYl053s/edit?usp=sharing" },
+  { category: "PrePlan Items", title: "HR Seminar", url: "https://docs.google.com/presentation/d/1SZBRMCT-iHbr71V9Bk5X5IvRxK1Mp6CO/edit?usp=sharing" },
+  { category: "PrePlan Items", title: "Leadership Team Responsibilities", url: "https://docs.google.com/spreadsheets/d/1Rz7SSRpf6mOfP9FwI2UGKMaUtxNLs9c7/edit?usp=sharing" },
+
+  // Leadership Items
+  { category: "Leadership Items", title: "Monday Morning Leadership (Mental Health lessons)", url: "https://docs.google.com/document/d/15cZRgAZPLD3oFs9zHBTmZeA1aO1kWXBGIuON96CkIhw/edit?usp=sharing" },
+  { category: "Leadership Items", title: "CNN 10", url: "https://www.cnn.com/cnn10" },
+  { category: "Leadership Items", title: "CNN 10 Questions", url: "https://docs.google.com/presentation/d/1fQ1Tw7dh0x-kKgb0IIR_1pV92tBz8nbpF7wLw4hTPq8/edit?usp=sharing" },
+  { category: "Leadership Items", title: "7 Habits Reference Sheet", url: "https://limweekly.org/wordpress/wp-content/uploads/2019/04/EDU1931609_LIMWKLY_7H_Practicies_Reference_Sheet_v1.0.2_HR.pdf" },
+  { category: "Leadership Items", title: "Leader In Me", url: "https://limweekly.org/new-staff-start-up-strategies/" },
+  { category: "Leadership Items", title: "Digital Leadership Notebook", url: "https://docs.google.com/presentation/d/1aLQVhgdQfggp735CmfhRyPwf1nlfyGRDidA87u7ssWc/copy" },
+  { category: "Leadership Items", title: "PBL for Elevate", url: "https://drive.google.com/drive/folders/11mobBFEc8KYWdJg_bvyfk9fzxluGrac_?usp=sharing" },
+  { category: "Leadership Items", title: "Mental Health MML", url: "https://docs.google.com/document/d/10l60B0OL5eVvANV-nVIckAPiOShDiGfHN417COqVlGE/edit?usp=sharing" },
+
+  // SSA Items
+  { category: "SSA Items", title: "Bell Schedule", url: "https://drive.google.com/file/d/18qAmxdkp-1FqIWoIcJKn67Tq9pVyZZvE/view?usp=sharing" },
+  { category: "SSA Items", title: "Staff Handbook", url: "https://docs.google.com/document/d/1Osp2gH6FktPCakSRO9EUJdnxj4j-5Yd6/edit?usp=sharing" },
+  { category: "SSA Items", title: "Bus List", url: "https://docs.google.com/document/d/1lqph8jjIPjbmyJc0AG7wQxyIelUopgHc4QAf7PMz1kk/edit?usp=sharing" },
+  { category: "SSA Items", title: "Bus QR Code", url: "https://docs.google.com/document/d/1-nP7RuJbY2SmjCaIaUeRX4kWNzYCT5DY4Ec7qOSAGlg/edit?usp=sharing" },
+  { category: "SSA Items", title: "HERO", url: "https://access.heropowered.com/" },
+  { category: "SSA Items", title: "Phone List", url: "https://docs.google.com/spreadsheets/d/1imLn-fsMhLXth1Dv2A2VNsZNziy0kOiF/edit?usp=sharing" },
+  { category: "SSA Items", title: "Supply Replenishment (Form)", url: "https://docs.google.com/forms/d/e/1FAIpQLSczViU_-ANUmXu-Q7S9vSx1ubveySFys2wYMlb9tplQKG2VeA/viewform?usp=sf_link" },
+  { category: "SSA Items", title: "Sign in / Sign out QRs", url: "https://docs.google.com/presentation/d/1ivXXBM-XDT_MF9m50-EAjI5oLypZXo-ovRLsOHmIR-8/edit#slide=id.p" },
+  { category: "SSA Items", title: "Field Day Schedule", url: "https://drive.google.com/file/d/18tp1gf-SrmLQKWkx7YSwg4brI6YZDLIA/view?usp=sharing" },
+  { category: "SSA Items", title: "8th Grade Field Day Overview", url: "https://drive.google.com/file/d/15Fq1_DwGvHY0PHdHODnKQuhRLxuHfZ_F/view?usp=sharing" },
+  { category: "SSA Items", title: "6th/7th STORM Day Overview", url: "https://drive.google.com/file/d/1hqELny7lJxO73KF9SN-jkekasBIwfZFy/view?usp=sharing" },
+  { category: "SSA Items", title: "Seating Charts", url: "https://docs.google.com/spreadsheets/d/1IRQcMX9UMkgMpZfxgMPjvdiyJeNmtkKhmK8tiUTX1iA/edit?usp=sharing" },
+  { category: "SSA Items", title: "SRO Presentation - Raptor", url: "https://docs.google.com/presentation/d/1VHK2q39QwgFeCBihGw-u5oL_tvAsS2fA/edit?usp=sharing" },
+
+  // Discipline Items
+  { category: "Discipline Items", title: "Dress Code", url: "https://drive.google.com/file/d/1lMzkhMyiM0bM7jAHLsDAlW75zc-F9zjc/view?usp=sharing" },
+  { category: "Discipline Items", title: "Student Reflection Sheet", url: "https://docs.google.com/document/d/1b2tb8CxKjeTQS4RKJ0CEdsRs3_kDm1YQ/edit?usp=sharing" },
+  { category: "Discipline Items", title: "Behavior Tracking Form", url: "https://docs.google.com/document/d/1cdI5HBSz-9lneMjZ3THwu-C-2o8U0vIg/copy" },
+  { category: "Discipline Items", title: "Leadership Tool and Graphic Organizers", url: "https://drive.google.com/file/d/1_ggOPTn9oVXMCNMztXU-xrSpsB6C73FP/view?usp=sharing" },
+  { category: "Discipline Items", title: "Discipline 101", url: "https://seminoleschools-my.sharepoint.com/:p:/g/personal/hernanlt_myscps_us/EfbTWogD0YBLiNtc8kDU63sBVz6HP9zU6I3GXl_xebOuyA?e=SLjLki" },
+
+  // Instructional Items
+  { category: "Instructional Items", title: "Student Discourse", url: "https://docs.google.com/document/d/1Cfh-5al8m6_V0uIfiDix6CPGqH78iAx2JpXQR0rtkao/edit?usp=sharing" },
+  { category: "Instructional Items", title: "PLC Notes", url: "https://docs.google.com/document/d/17shAN98CRJNJTgUJdIEm8pMNBmuTEXIa/copy" },
+  { category: "Instructional Items", title: "Super 7", url: "https://docs.google.com/document/d/1-ZDJB0He_qInPJReH047odTZyx5ZMeDMbluXhPGSixQ/edit?usp=sharing" },
+  { category: "Instructional Items", title: "Reading Strategies", url: "https://docs.google.com/document/d/1jYMSmC5TgBFxciC2mybIabqEK1d7T2ubq0r7RHIqeaI/edit?usp=sharing" },
+  { category: "Instructional Items", title: "Brain Breaks", url: "https://docs.google.com/document/d/14b8FbckLZudjNiVGaPzHBxwggbhhW2nfnZuc4ii1ULU/edit?usp=sharing" },
+  { category: "Instructional Items", title: "Mindful Moments", url: "https://docs.google.com/document/d/110qiY4c6IK038j_grcJAXBMaRI3F-7fREDquka_CXgk/edit?usp=sharing" },
+  { category: "Instructional Items", title: "Elevate Referral Form (Tier 2 & RISE)", url: "https://docs.google.com/forms/d/e/1FAIpQLSdKKDRcg_1urmRKwYJpyipEgKmSU3POKC246ff-ncrPzaYHMg/viewform" },
+  { category: "Instructional Items", title: "Top 5 Cooperative Structures", url: "https://docs.google.com/document/d/1MmzgdAECKris-X4XRVNFjOcTQUtKByh1B93j6EnSrHY/edit?usp=sharing" },
+  { category: "Instructional Items", title: "Cooperative Learning Table Mats", url: "https://drive.google.com/file/d/1Uf8DfrgoPb3kdVk07sml7rpon4VHQ4dp/view?usp=sharing" },
+
+  // Testing
+  { category: "Testing", title: "Quarter 1 C9A", url: "https://drive.google.com/drive/folders/1Yg4Y18yuFYlo3MLLU1sUQ-UJPfRBkmpg?usp=sharing" },
+  { category: "Testing", title: "Quarter 2 C9A", url: "https://drive.google.com/drive/folders/1iMvBfr3OtDKbt6wgd60mP6xJNROOUwwA?usp=sharing" },
+  { category: "Testing", title: "Quarter 3 C9A", url: "https://drive.google.com/drive/folders/12apT02NaPZXnranrTG0uWXzcc9Xd-04p?usp=sharing" },
+  { category: "Testing", title: "PSAT Information", url: "https://drive.google.com/drive/folders/1UqarN9ib6B1XoW2nm8RKsaXcmM5aHsAW?usp=sharing" },
+  { category: "Testing", title: "FSA Practice Test Scripts", url: "https://drive.google.com/drive/folders/1fPhYucgOzBAllwrRzfgO85_GCSwgwzEI?usp=sharing" },
+  { category: "Testing", title: "FSA Writing", url: "https://drive.google.com/drive/folders/1A8EJGUXiGBV7iB_b9-dybqp-u_AMrIvp?usp=sharing" },
+  { category: "Testing", title: "May FSA Testing", url: "https://drive.google.com/drive/folders/1iT5WKmYt95J8b6C9xzEXtQA32H-kGSSb?usp=sharing" },
+];
+
+const categoryIcons = {
+  "PrePlan Items": '<path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>',
+  "Leadership Items": '<path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4l-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/>',
+  "SSA Items": '<path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/>',
+  "Discipline Items": '<path d="M12 2l8 4v6c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6z"/>',
+  "Instructional Items": '<path d="M12 4.5C10 3 6.5 2.5 4 3v13c2.5-.5 6 0 8 1.5 2-1.5 5.5-2 8-1.5V3c-2.5-.5-6 0-8 1.5z"/>',
+  "Testing": '<path d="M9 2h6M12 2v6M6 8h12l1.5 12a2 2 0 0 1-2 2H6.5a2 2 0 0 1-2-2z"/>'
+};
+const defaultIcon = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>';
+
+function iconSvg(cat) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${categoryIcons[cat] || defaultIcon}</svg>`;
+}
+
+const categories = [...new Set(resources.map(r => r.category))];
+const sectionsEl = document.getElementById("sections");
+const pillRow = document.getElementById("pillRow");
+const emptyState = document.getElementById("emptyState");
+
+categories.forEach(cat => {
+  const pill = document.createElement("div");
+  pill.className = "pill";
+  pill.dataset.cat = cat;
+  pill.textContent = cat;
+  pillRow.appendChild(pill);
+});
+
+categories.forEach(cat => {
+  const items = resources.filter(r => r.category === cat);
+  const section = document.createElement("section");
+  section.className = "category-section";
+  section.dataset.cat = cat;
+  section.innerHTML = `
+    <div class="category-heading">
+      <h2>${cat}</h2>
+      <span class="category-count">${items.length} link${items.length === 1 ? "" : "s"}</span>
+    </div>
+    <div class="card-grid">
+      ${items.map(r => `
+        <a class="card" href="${r.url}" target="_blank" rel="noopener" data-title="${r.title.toLowerCase()}">
+          <div class="card-icon">${iconSvg(cat)}</div>
+          <div class="card-body">
+            <div class="card-title">${r.title}</div>
+            <div class="card-meta">${cat}</div>
+          </div>
+        </a>
+      `).join("")}
+    </div>
+  `;
+  sectionsEl.appendChild(section);
+});
+
+let activeCat = "all";
+const searchInput = document.getElementById("searchInput");
+
+function applyFilters() {
+  const q = searchInput.value.trim().toLowerCase();
+  let anyVisible = false;
+
+  document.querySelectorAll(".category-section").forEach(section => {
+    const cat = section.dataset.cat;
+    const matchesCat = activeCat === "all" || activeCat === cat;
+    let sectionHasVisibleCard = false;
+
+    section.querySelectorAll(".card").forEach(card => {
+      const matchesSearch = !q || card.dataset.title.includes(q);
+      const show = matchesCat && matchesSearch;
+      card.style.display = show ? "" : "none";
+      if (show) sectionHasVisibleCard = true;
+    });
+
+    section.classList.toggle("hidden", !sectionHasVisibleCard);
+    if (sectionHasVisibleCard) anyVisible = true;
+  });
+
+  emptyState.classList.toggle("hidden", anyVisible);
+}
+
+pillRow.addEventListener("click", e => {
+  const pill = e.target.closest(".pill");
+  if (!pill) return;
+  document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+  pill.classList.add("active");
+  activeCat = pill.dataset.cat;
+  applyFilters();
+});
+
+searchInput.addEventListener("input", applyFilters);
+</script>
+
+</body>
+</html>
