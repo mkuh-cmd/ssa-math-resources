@@ -147,22 +147,14 @@ body.panel-open { padding-right: 48%; }
 .pp-nodocs { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; color: #94a3b8; font-size: .88rem; line-height: 1.6; }
 #pdf-frame { flex: 1; border: none; background: #e8ecf0; min-height: 0; }
 
-/* Tablet & mobile: full-width panel with backdrop */
-#pdf-backdrop {
-  display: none; position: fixed; inset: 0;
-  background: rgba(12,34,68,.55); z-index: 89;
-  backdrop-filter: blur(2px);
-}
-body.panel-open #pdf-backdrop { display: block; }
-
+/* Tablet: side panel, no backdrop — left content stays interactive */
 @media (max-width: 1024px) {
-  #pdf-panel { width: 94%; max-width: 680px; right: 50%; transform: translateX(50%) translateX(200%); }
-  #pdf-panel.open { transform: translateX(50%); }
-  body.panel-open { padding-right: 0; }
+  #pdf-panel { width: 58%; max-width: 580px; }
+  body.panel-open { padding-right: 58%; }
 }
-@media (max-width: 600px) {
-  #pdf-panel { width: 100%; max-width: 100%; right: 0; transform: translateX(105%); }
-  #pdf-panel.open { transform: translateX(0); }
+@media (max-width: 700px) {
+  #pdf-panel { width: 100%; max-width: 100%; }
+  body.panel-open { padding-right: 0; }
 }
 </style>
 
