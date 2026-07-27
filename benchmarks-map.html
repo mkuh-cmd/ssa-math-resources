@@ -206,6 +206,7 @@ header h1 { font-family:'Lexend',sans-serif; font-size:1.5rem; letter-spacing:-.
 .gcol h2 span { font-family:'Inter',sans-serif; }
 .thread { box-shadow:0 3px 16px rgba(15,23,42,.07); border-radius:14px; }
 .thread-head b { font-family:'Lexend',sans-serif; font-weight:600; }
+.tarrow { font-size:2.4rem; color:var(--navy); opacity:.5; padding-top:0; line-height:1; font-weight:700; }
 
 /* Chips */
 .chip { border-radius:8px; font-size:.73rem; padding:5px 10px; }
@@ -358,7 +359,7 @@ function buildProg(){
       const codes = cells[i];
       html += `<div class="tcell"><div class="tgrade">Grade ${6+i}</div>` +
         (codes.length ? codes.map(c => chip(byCode[c])).join("") : `<div class="tnone">&#8212;</div>`) + `</div>`;
-      if (i<2) html += `<div class="tarrow">&#8594;</div>`;
+      if (i<2) html += `<div class="tarrow">&#10145;</div>`;
     }
     html += `</div></div>`;
   }
