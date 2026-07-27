@@ -196,7 +196,11 @@ header h1 { font-family:'Lexend',sans-serif; font-size:1.5rem; letter-spacing:-.
 
 /* Cards & table polish */
 .matrix { box-shadow:0 4px 24px rgba(15,23,42,.09); border-radius:14px; }
-.matrix th { background:#f4f7fb; letter-spacing:.8px; }
+.matrix th { background:#f4f7fb; letter-spacing:.8px; border-bottom:2px solid #cbd5e1; border-right:2px solid #cbd5e1; }
+.matrix th:last-child { border-right:none; }
+.matrix td { border-bottom:1.5px solid #e2e8f0; border-right:2px solid #e2e8f0; }
+.matrix td:last-child { border-right:none; }
+.matrix tr:last-child td { border-bottom:0; }
 .gcol { box-shadow:0 4px 24px rgba(15,23,42,.09); border-radius:14px; }
 .gcol h2 { font-family:'Lexend',sans-serif; background:#f4f7fb; }
 .gcol h2 span { font-family:'Inter',sans-serif; }
