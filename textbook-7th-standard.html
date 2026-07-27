@@ -206,7 +206,7 @@
       <button class="sp-q-btn"       onclick="showSpQ('q4',this)">Quarter 4</button>
     </div>
     <div id="sp-q1" class="sp-panel active"><div class="sp-file-list" id="sp-q1-list"></div></div>
-    <div id="sp-q2" class="sp-panel"><div class="sp-coming">Quarter 2 materials will appear here as they are added.</div></div>
+    <div id="sp-q2" class="sp-panel"><div class="sp-file-list" id="sp-q2-list"></div></div>
     <div id="sp-q3" class="sp-panel"><div class="sp-coming">Quarter 3 materials will appear here as they are added.</div></div>
     <div id="sp-q4" class="sp-panel"><div class="sp-coming">Quarter 4 materials will appear here as they are added.</div></div>
   </div>
@@ -340,16 +340,29 @@ function showSpQ(q, btn) {
     "9. SP 2.9.pdf","10. SP 3.1.pdf","11. SP 3.2.pdf","12. SP 3.3.pdf",
     "13. SP 3.4.pdf","14. SP 3.5.pdf","15. SP 3.6.pdf","16. SP 3.7.pdf","17. SP 3.8.pdf"
   ];
-  const list = document.getElementById('sp-q1-list');
-  q1Files.forEach((filename, idx) => {
-    const label = filename.replace(/^\d+\.\s*/, '').replace('.pdf', '');
-    const url = `${SP_BASE}/${e('7th Grade Standard')}/${e('Quarter 1')}/${e(filename)}`;
-    list.innerHTML += `<a class="sp-file-item" href="${url}" target="_blank">
-      <span class="sp-num">${idx + 1}</span>
-      <span>${label}</span>
-      <span class="sp-badge">SP</span>
-    </a>`;
-  });
+  function populateSP(listId, files, quarter) {
+    const list = document.getElementById(listId);
+    files.forEach((filename, idx) => {
+      const label = filename.replace(/^\d+\.\s*/, '').replace('.pdf', '');
+      const url = `${SP_BASE}/${e('7th Grade Standard')}/${e(quarter)}/${e(filename)}`;
+      list.innerHTML += `<a class="sp-file-item" href="${url}" target="_blank">
+        <span class="sp-num">${idx + 1}</span>
+        <span>${label}</span>
+        <span class="sp-badge">SP</span>
+      </a>`;
+    });
+  }
+
+  populateSP('sp-q1-list', q1Files, 'Quarter 1');
+
+  const q2Files = [
+    "SP 4.1.pdf","SP 4.2.pdf","SP 4.3.pdf","SP 4.4.pdf","SP 4.5.pdf",
+    "SP 4.6.pdf","SP 4.7.pdf","SP 4.8.pdf","SP 4.9.pdf","SP 4.10.pdf",
+    "SP 5.1.pdf","SP 5.2.pdf","SP 5.3.pdf","SP 5.4.pdf","SP 5.5.pdf",
+    "SP 5.6.pdf","SP 5.7.pdf","SP 5.8.pdf","SP 5.9.pdf","SP 5.10.pdf",
+    "SP 6.1.pdf","SP 6.2.pdf","SP 6.3.pdf","SP 6.4.pdf"
+  ];
+  populateSP('sp-q2-list', q2Files, 'Quarter 2');
 })();
 </script>
 </body>
