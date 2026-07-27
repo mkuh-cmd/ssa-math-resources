@@ -147,9 +147,22 @@ body.panel-open { padding-right: 48%; }
 .pp-nodocs { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; color: #94a3b8; font-size: .88rem; line-height: 1.6; }
 #pdf-frame { flex: 1; border: none; background: #e8ecf0; min-height: 0; }
 
-@media (max-width: 700px) {
-  #pdf-panel { width: 100%; max-width: 100%; }
+/* Tablet & mobile: full-width panel with backdrop */
+#pdf-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(12,34,68,.55); z-index: 89;
+  backdrop-filter: blur(2px);
+}
+body.panel-open #pdf-backdrop { display: block; }
+
+@media (max-width: 1024px) {
+  #pdf-panel { width: 94%; max-width: 680px; right: 50%; transform: translateX(50%) translateX(200%); }
+  #pdf-panel.open { transform: translateX(50%); }
   body.panel-open { padding-right: 0; }
+}
+@media (max-width: 600px) {
+  #pdf-panel { width: 100%; max-width: 100%; right: 0; transform: translateX(105%); }
+  #pdf-panel.open { transform: translateX(0); }
 }
 </style>
 
@@ -263,6 +276,7 @@ header h1 { font-family:'Lexend',sans-serif; font-size:1.5rem; letter-spacing:-.
   <section id="view-prog" class="view"></section>
 </main>
 
+<div id="pdf-backdrop"></div>
 <div id="pdf-panel" role="complementary" aria-label="Big-M Document Preview">
   <div class="pp-head">
     <div class="pp-top">
@@ -403,6 +417,17 @@ function applyFilter(){
   }, 320);
 }
 
+// Use Google Docs viewer on touch devices (iPads, tablets, phones) so PDFs
+// render inline without a download prompt.
+function pdfSrc(href) {
+  const isTouch = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || 'ontouchstart' in window;
+  if (isTouch) {
+    const abs = new URL(href, location.href).href;
+    return `https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(abs)}`;
+  }
+  return href;
+}
+
 function openPanel(code) {
   const b = byCode[code];
   const codeEl   = document.getElementById('pp-code');
@@ -428,11 +453,11 @@ function openPanel(code) {
       btn.addEventListener('click', () => {
         tabsEl.querySelectorAll('.pp-tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        frameEl.src = doc.href;
+        frameEl.src = pdfSrc(doc.href);
       });
       tabsEl.appendChild(btn);
     });
-    frameEl.src = b.m[0].href;
+    frameEl.src = pdfSrc(b.m[0].href);
   }
   document.getElementById('pdf-panel').classList.add('open');
   document.body.classList.add('panel-open');
@@ -468,6 +493,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape") closePanel(); });
 document.getElementById("pp-close").addEventListener("click", closePanel);
+document.getElementById("pdf-backdrop").addEventListener("click", closePanel);
 document.getElementById("search").addEventListener("input", e => { query = e.target.value; applyFilter(); });
 
 buildLegend(); buildMatrix(); buildGrade(); buildProg();
