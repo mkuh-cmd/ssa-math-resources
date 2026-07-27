@@ -79,6 +79,11 @@
     font-size: 0.82rem; font-weight: 600; color: #555;
     white-space: nowrap;
   }
+  .res-table td.lesson-name {
+    text-align: left; font-size: 0.81rem; font-weight: 400; color: #374151;
+    white-space: normal; min-width: 200px;
+  }
+  .res-table thead th.lesson-name-h { text-align: left; }
 
   /* Resource link pills */
   .res-link {
@@ -135,6 +140,7 @@
   @media(max-width:600px){
     .res-table thead th:nth-child(n+3) { display: none; }
     .res-table td:nth-child(n+3) { display: none; }
+    .res-table td.lesson-name { max-width: 140px; font-size: 0.75rem; }
   }
 
   /* ═══ REDESIGN LAYER — SSA brand: deep navy + gold · Lexend/Inter ═══ */
@@ -221,6 +227,140 @@
 <script>
 const BASE = "3.%20Textbook/4.%207th%20Standard";
 const e = encodeURIComponent;
+
+// ── Unit titles (derived from slide title pages) ──
+const UNIT_NAMES = {
+  1:  'Number Sense & Foundations',
+  2:  'Probability & Number Forms',
+  3:  'Rational Number Operations',
+  4:  'Area & Circles',
+  5:  'Statistics, Scale & Proportions',
+  6:  'Proportional Relationships',
+  7:  'Percents & Data Representation',
+  8:  'Exponents & Expressions',
+  9:  'Linear Expressions',
+  10: 'Equations & Inequalities',
+  11: 'Proportional Relationships & Graphs',
+  12: 'Surface Area & Volume of Cylinders',
+  13: 'Data & Statistics'
+};
+
+// ── Lesson titles (read from first slide of each .pptx) ──
+const LESSON_NAMES = {
+  '1.1':  'Statistics and Interpreting Data',
+  '1.2':  'Ratio Relationships',
+  '1.3':  'Rational Numbers and Absolute Value',
+  '1.4':  'Operations with Integers',
+  '1.5':  'Solving One-Step Equations',
+  '1.6':  'Writing and Solving One-Step Equations in Real-World Contexts',
+  '2.1':  'Exploring Sample Space',
+  '2.2':  'Determining Sample Space',
+  '2.3':  'Rewriting Numbers in Equivalent Forms',
+  '2.4':  'Converting Between Repeating Decimals and Fractions',
+  '2.5':  'Probability',
+  '2.6':  'Comparing Probabilities',
+  '2.7':  'Experimental and Theoretical Probability',
+  '2.8':  'Simulating Small and Large Numbers of Trials',
+  '2.9':  'Experimental and Theoretical Probabilities from Simulations',
+  '3.1':  'Adding Rational Numbers',
+  '3.2':  'Subtracting Rational Numbers',
+  '3.3':  'Multiplying Rational Numbers',
+  '3.4':  'Dividing Rational Numbers',
+  '3.5':  'Solving Real-World Problems with Rational Numbers – Part 1',
+  '3.6':  'Solving Real-World Problems with Rational Numbers – Part 2',
+  '3.7':  'Solving Real-World Problems with Rational Numbers – Part 3',
+  '3.8':  'Solving Real-World Problems with Rational Numbers – Part 4',
+  '4.1':  'Deriving Area Formulas for Trapezoids, Parallelograms, and Rhombi',
+  '4.2':  'Finding the Area of Trapezoids, Parallelograms, and Rhombi',
+  '4.3':  'Finding the Area of Polygons',
+  '4.4':  'Finding the Area of Composite Figures',
+  '4.5':  'Exploring Relationships in Circles',
+  '4.6':  'Finding Circumference',
+  '4.7':  'Finding Radius and Diameter',
+  '4.8':  'Exploring the Area of a Circle',
+  '4.9':  'Finding the Area of a Circle',
+  '4.10': 'Using Circumference and Area to Solve Problems',
+  '5.1':  'Random Samples vs. Population',
+  '5.2':  'Determining Probability',
+  '5.3':  'Making Population Predictions – Part 1',
+  '5.4':  'Making Population Predictions – Part 2',
+  '5.5':  'Scale Factors – Perimeter',
+  '5.6':  'Scale Factors – Area',
+  '5.7':  'Scale Drawings',
+  '5.8':  'Solving Problems Involving Dimensions and Perimeters of Geometric Figures',
+  '5.9':  'Solving Problems Involving Dimensions and Areas of Geometric Figures',
+  '5.10': 'Solving Problems Involving Real-World Scale Drawings',
+  '6.1':  'Paying Your Way in Mathlandia',
+  '6.2':  'Currency Conversions',
+  '6.3':  'Converting Units of Length',
+  '6.4':  'Converting Mass and Area',
+  '6.5':  'Converting Units of Volume',
+  '6.6':  'Creating Proportions',
+  '6.7':  'Using Proportions to Solve Problems',
+  '6.8':  'Solving Real-World Problems Involving Proportions',
+  '6.9':  'Exploring Multi-Step Proportion Problems',
+  '6.10': 'Solving Multi-Step Proportion Problems',
+  '6.11': 'Reasoning Through Problems Involving Proportional Relationships',
+  '7.1':  'Circle Graphs',
+  '7.2':  'Sectors of a Circle',
+  '7.3':  'Constructing Circle Graphs',
+  '7.4':  'Interpreting Circle Graphs',
+  '7.5':  'Discounts and Markups',
+  '7.6':  'Determining Tax, Tip, or Fees Given a Percentage',
+  '7.7':  'Solving Multi-Step Problems Involving Discounts, Taxes, Tips, or Fees',
+  '7.8':  'Simple Interest',
+  '7.9':  'Percent Increase and Decrease',
+  '7.10': 'Calculating Percent Error',
+  '8.1':  'Product Laws of Exponents',
+  '8.2':  'Quotient Laws of Exponents',
+  '8.3':  'Exponential Expressions',
+  '8.4':  'Evaluating Numeric Expressions – Part 1',
+  '8.5':  'Evaluating Numeric Expressions – Part 2',
+  '8.6':  'Evaluating Numeric Expressions – Part 3',
+  '9.1':  'Adding and Subtracting Linear Expressions with Integer Coefficients',
+  '9.2':  'Adding Linear Expressions with Rational Coefficients',
+  '9.3':  'Subtracting Linear Expressions with Rational Coefficients',
+  '9.4':  'Adding and Subtracting Expressions with Rational Coefficients',
+  '9.5':  'Equivalent Numerical Expressions',
+  '9.6':  'Rewriting Equivalent Numerical Expressions',
+  '9.7':  'Equivalent Linear Expressions',
+  '9.8':  'Equivalent Expressions Using Properties of Operations',
+  '10.1':  'Exploring Inequalities – Part 1',
+  '10.2':  'Solving One-Step Inequalities Using Addition and Subtraction',
+  '10.3':  'Exploring Inequalities – Part 2',
+  '10.4':  'Solving One-Step Inequalities Using Multiplication and Division',
+  '10.5':  'Solving Two-Step Equations Using Properties of Equality',
+  '10.6':  'Solving Two-Step Equations',
+  '10.7':  'Solving Equations Involving the Distributive Property',
+  '10.8':  'Solving Real-World Problems with Two-Step Equations',
+  '10.9':  'Writing Two-Step Equations from Real-World Contexts',
+  '10.10': 'Writing and Solving Equations in Real-World Context',
+  '11.1':  'Graphing Proportional Relationships',
+  '11.2':  'Constant of Proportionality – Part 1',
+  '11.3':  'Constant of Proportionality – Part 2',
+  '11.4':  'Features of Proportional Relationships',
+  '11.5':  'Is It Proportional?',
+  '11.6':  'Representing Proportional Relationships with Equations',
+  '11.7':  'Translating Between Representations of Proportional Relationships',
+  '11.8':  'Putting It All Together',
+  '11.9':  'Revisiting Relationships in Circles',
+  '12.1':  'Finding Surface Area of Right Circular Cylinders Using Nets',
+  '12.2':  'Finding Surface Area of Right Circular Cylinders',
+  '12.3':  'Solving Problems Involving Surface Area of Right Circular Cylinders',
+  '12.4':  'Volume of Right Circular Cylinders – Part 1',
+  '12.5':  'Volume of Right Circular Cylinders – Part 2',
+  '12.6':  'Problem-Solving with Volume of Cylinders',
+  '13.1':  'Effects of Outliers',
+  '13.2':  'Justifying Measures of Center and Spread',
+  '13.3':  'Determining Appropriate Measures of Center and Variation',
+  '13.4':  'Comparing Graphical Representations',
+  '13.5':  'Comparing Data Sets',
+  '13.6':  'Comparing Data Sets and Graphs',
+  '13.7':  'Representing Real-World Contexts with Graphs',
+  '13.8':  'Creating Displays for Numerical Data',
+  '13.9':  'Creating Displays for Categorical Data'
+};
+
 const unitLessons = {1:6,2:9,3:8,4:10,5:10,6:11,7:10,8:6,9:8,10:10,11:9,12:6,13:9};
 
 function showTab(name, btn) {
@@ -237,6 +377,7 @@ function showTab(name, btn) {
 
   for (let u = 1; u <= 13; u++) {
     const count = unitLessons[u];
+    const unitTitle = UNIT_NAMES[u] || '';
 
     // Nav button
     nav.innerHTML += `<button class="unit-nav-btn" onclick="document.getElementById('unit-${u}').scrollIntoView({behavior:'smooth'})">Unit ${u}</button>`;
@@ -244,6 +385,8 @@ function showTab(name, btn) {
     // Build table rows
     let rows = '';
     for (let l = 1; l <= count; l++) {
+      const key        = `${u}.${l}`;
+      const lessonName = LESSON_NAMES[key] || '';
       const slideUrl   = `${BASE}/${e('1. Presentation Slide')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pptx')}`;
       const studentUrl = `${BASE}/${e('2. Student Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`;
       const teacherUrl = `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [T].pdf')}`;
@@ -251,7 +394,8 @@ function showTab(name, btn) {
       const keyUrl     = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P.K].pdf')}`;
 
       rows += `<tr>
-        <td>${u}.${l}</td>
+        <td>${key}</td>
+        <td class="lesson-name">${lessonName}</td>
         <td><a class="res-link lnk-slide"   href="${slideUrl}"   download>Slide</a></td>
         <td><a class="res-link lnk-student" href="${studentUrl}" target="_blank">Student</a></td>
         <td><a class="res-link lnk-teacher" href="${teacherUrl}" target="_blank">Teacher</a></td>
@@ -262,10 +406,11 @@ function showTab(name, btn) {
 
     wrap.innerHTML += `
       <div class="unit-card" id="unit-${u}">
-        <div class="unit-heading">Unit ${u}</div>
+        <div class="unit-heading">Unit ${u} — ${unitTitle}</div>
         <table class="res-table">
           <thead><tr>
             <th>Lesson</th>
+            <th class="lesson-name-h">Title</th>
             <th>Slide</th>
             <th>Student</th>
             <th>Teacher</th>
