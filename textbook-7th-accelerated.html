@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7th Grade Accelerated Textbook — SSA Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #222; }
+
+  header { background: #1a3a6b; color: white; padding: 24px 32px; }
+  header h1 { font-size: 1.6rem; font-weight: 700; }
+  header p  { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex; gap: 2px; background: #13305c;
+    padding: 0 24px; overflow-x: auto;
+  }
+  .tab-btn {
+    background: none; border: none; color: rgba(255,255,255,0.7);
+    padding: 12px 20px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
+    white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s;
+  }
+  .tab-btn:hover { color: white; }
+  .tab-btn.active { color: #f9c74f; border-bottom-color: #f9c74f; }
+
+  .content { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .section-label { font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+
+  /* ── Quarter filter bar ── */
+  .sp-q-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .sp-q-btn {
+    padding: 7px 18px; border: 2px solid #1a3a6b; border-radius: 20px;
+    background: none; color: #1a3a6b; font-weight: 700; font-size: 0.82rem;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .sp-q-btn.active { background: #1a3a6b; color: white; }
+  .sp-q-btn:hover:not(.active) { background: #e8edf5; }
+
+  /* ── Unit card ── */
+  .unit-card {
+    background: white; border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    overflow: hidden; margin-bottom: 14px;
+    scroll-margin-top: 20px;
+  }
+  .unit-heading {
+    background: #1a3a6b; color: white;
+    padding: 10px 16px; font-weight: 700; font-size: 0.95rem;
+  }
+  .unit-sub-heading {
+    background: #e8edf5; color: #1a3a6b;
+    padding: 7px 16px; font-weight: 700; font-size: 0.8rem;
+    border-bottom: 1px solid #d0d9ec; letter-spacing: 0.3px;
+  }
+
+  /* Lesson resource table */
+  .res-table { width: 100%; border-collapse: collapse; }
+  .res-table thead tr { background: #f0f4ff; border-bottom: 2px solid #dde4f0; }
+  .res-table thead th {
+    padding: 7px 10px; font-size: 0.72rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.05em; color: #555; text-align: center;
+  }
+  .res-table thead th:first-child { text-align: left; padding-left: 16px; }
+  .res-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+  .res-table tbody tr:last-child { border-bottom: none; }
+  .res-table tbody tr:hover { background: #fafbff; }
+  .res-table td { padding: 6px 10px; text-align: center; vertical-align: middle; }
+  .res-table td:first-child { text-align: left; padding-left: 16px; font-size: 0.82rem; font-weight: 600; color: #555; white-space: nowrap; }
+  .res-table td.lesson-name { text-align: left; font-size: 0.81rem; font-weight: 400; color: #374151; white-space: normal; min-width: 200px; }
+  .res-table thead th.lesson-name-h { text-align: left; }
+
+  /* Resource link pills */
+  .res-link {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 3px 9px; border-radius: 12px;
+    font-size: 0.75rem; font-weight: 600;
+    text-decoration: none; transition: opacity 0.15s; white-space: nowrap;
+  }
+  .res-link:hover { opacity: 0.75; }
+  .lnk-slide   { background: #dbeafe; color: #1d4ed8; }
+  .lnk-student { background: #dcfce7; color: #15803d; }
+  .lnk-teacher { background: #fef3c7; color: #92400e; }
+  .lnk-blank   { background: #f3e8ff; color: #7c3aed; }
+  .lnk-key     { background: #fee2e2; color: #b91c1c; }
+
+  /* Coming soon placeholder */
+  .coming-soon {
+    background: white; border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    padding: 48px 20px; text-align: center;
+    color: #aaa; font-size: 0.9rem; margin-bottom: 14px;
+  }
+  .coming-soon strong { display: block; font-size: 1rem; color: #bbb; margin-bottom: 6px; }
+
+  /* ── Assessments ── */
+  .assess-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media(max-width:700px){ .assess-grid { grid-template-columns: 1fr; } }
+  .assess-col { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
+  .assess-header { padding: 9px 14px; font-weight: 700; font-size: 0.88rem; color: white; }
+  .blank-h { background: #2c3e50; } .key-h { background: #27ae60; } .guide-h { background: #8e44ad; }
+  .assess-links { padding: 8px 14px 12px; }
+  .assess-links a { display: block; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
+  .assess-links a:last-child { border-bottom: none; }
+  .assess-links a:hover { color: #27ae60; }
+
+  /* ── Skills Practice ── */
+  .sp-panel { display: none; }
+  .sp-panel.active { display: block; }
+  .sp-file-list { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
+  .sp-file-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
+    text-decoration: none; color: #1a3a6b; font-size: 0.85rem; font-weight: 500;
+    transition: background 0.12s;
+  }
+  .sp-file-item:last-child { border-bottom: none; }
+  .sp-file-item:hover { background: #f0f4ff; color: #c0392b; }
+  .sp-num { font-size: 0.7rem; font-weight: 800; color: #bbb; min-width: 22px; text-align: right; }
+  .sp-badge { margin-left: auto; font-size: 0.67rem; font-weight: 800; background: #e8edf5; color: #1a3a6b; padding: 2px 7px; border-radius: 20px; }
+  .sp-coming { text-align: center; padding: 48px 20px; color: #aaa; font-size: 0.9rem; }
+
+  @media(max-width:600px){
+    .res-table thead th:nth-child(n+3) { display: none; }
+    .res-table td:nth-child(n+3) { display: none; }
+    .res-table td.lesson-name { max-width: 140px; font-size: 0.75rem; }
+  }
+
+  /* ═══ REDESIGN LAYER — SSA brand: deep navy + gold · Lexend/Inter ═══ */
+  body { font-family:'Inter','Segoe UI',Arial,sans-serif; background:#f4f6f8; color:#182236; display:flex; flex-direction:column; min-height:100vh; }
+  .topbar { position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:12px; padding:12px 22px; background:linear-gradient(90deg,#0c2244,#16335f); box-shadow:0 2px 14px rgba(12,34,68,0.25); }
+  .brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark { width:34px; height:34px; border-radius:9px; background:#f4b942; color:#0c2244; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .brand-mark svg { width:20px; height:20px; }
+  .brand-name { font-family:'Lexend',sans-serif; font-weight:700; font-size:0.95rem; color:#fff; letter-spacing:-0.2px; }
+  .brand-sub { font-size:0.62rem; color:rgba(255,255,255,0.55); letter-spacing:1.4px; text-transform:uppercase; font-weight:600; display:block; margin-top:1px; }
+  .back-hub { margin-left:auto; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; font:600 0.8rem/1 'Inter',sans-serif; color:#f4b942; text-decoration:none; transition:background 0.15s; }
+  .back-hub:hover { background:rgba(255,255,255,0.1); }
+  header { background:linear-gradient(120deg,#0c2244,#16335f); }
+  header h1 { font-family:'Lexend',sans-serif; letter-spacing:-0.4px; }
+  .tabs { background:#0a1d3a; }
+  .tab-btn.active { color:#f4b942; border-bottom-color:#f4b942; }
+  .unit-heading { background:linear-gradient(90deg,#0c2244,#16335f); font-family:'Lexend',sans-serif; }
+  .unit-sub-heading { background:#eef2f9; color:#0c2244; border-bottom-color:#d0d9ec; }
+  .sp-q-btn { border-color:#0c2244; color:#0c2244; }
+  .sp-q-btn.active { background:#0c2244; color:#fff; }
+  .sp-q-btn:hover:not(.active) { background:#e8edf5; }
+  button.res-link { border: none; cursor: pointer; font-family: inherit; }
+  .page-layout { display:flex; align-items:flex-start; flex:1; overflow:hidden; }
+  .content { flex:1; min-width:0; overflow-y:auto; max-height:calc(100vh - 57px); }
+  /* ── Preview panel ── */
+  .preview-panel {
+    width:0; overflow:hidden; flex-shrink:0;
+    transition:width 0.3s ease; position:sticky; top:57px;
+    height:calc(100vh - 57px); display:flex; flex-direction:column;
+    background:#fff; border-left:2px solid #e2e8f0;
+    box-shadow:-4px 0 20px rgba(0,0,0,0.08);
+  }
+  .preview-panel.open { width:46%; min-width:380px; }
+  .preview-header {
+    display:flex; align-items:center; gap:8px;
+    padding:10px 14px; flex-shrink:0;
+    background:linear-gradient(90deg,#0c2244,#16335f);
+  }
+  .preview-title { color:#fff; font-family:'Lexend',sans-serif; font-size:0.8rem; font-weight:600; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .preview-dl { display:inline-flex; align-items:center; gap:4px; padding:5px 11px; border-radius:8px; background:#f4b942; color:#0c2244; font-size:0.74rem; font-weight:700; text-decoration:none; flex-shrink:0; }
+  .preview-close { background:rgba(255,255,255,0.15); border:none; color:#fff; border-radius:6px; width:28px; height:28px; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .preview-close:hover { background:rgba(255,255,255,0.28); }
+  .preview-iframe { flex:1; border:none; width:100%; }
+  @media(max-width:900px){ .preview-panel.open { width:100%; min-width:0; position:fixed; top:57px; right:0; bottom:0; z-index:40; } }
+  .site-footer { margin-top:auto; padding:24px 24px 28px; background:#0c2244; text-align:center; }
+  .site-footer .foot-credit { font-size:.8rem; color:rgba(255,255,255,.9); font-weight:600; }
+  .site-footer .foot-line { color:rgba(255,255,255,.45); font-size:.73rem; margin-top:5px; }
+  @media (max-width:480px){ .brand-sub{display:none;} }
+
+  /* ── Quarter section ── */
+  .quarter-section { display: none; }
+  .quarter-section.active { display: block; }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></span>
+    <span><span class="brand-name">SSA Math Hub</span><span class="brand-sub">South Seminole Academy</span></span>
+  </a>
+  <a class="back-hub" href="index.html">← Back to Hub</a>
+</nav>
+
+<header>
+  <h1>7th Grade Accelerated — Textbook Curriculum</h1>
+  <p>South Seminole Academy · Math Department · 26–27 School Year</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="showTab('units',this)">Unit Resources</button>
+  <button class="tab-btn"        onclick="showTab('assess',this)">Assessments</button>
+  <button class="tab-btn"        onclick="showTab('sp',this)">Skills Practice</button>
+</nav>
+
+<div class="page-layout">
+<div class="content">
+
+  <!-- ── TAB 1: Unit Resources ── -->
+  <div id="tab-units" class="tab-panel active">
+    <div class="sp-q-bar" id="q-bar"></div>
+    <div id="units-container"></div>
+  </div>
+
+  <!-- ── TAB 2: Assessments ── -->
+  <div id="tab-assess" class="tab-panel">
+    <p class="section-label">Unit Assessments — coming soon</p>
+    <div class="coming-soon"><strong>Assessments</strong>Will appear here as they are added.</div>
+  </div>
+
+  <!-- ── TAB 3: Skills Practice ── -->
+  <div id="tab-sp" class="tab-panel">
+    <div class="sp-q-bar">
+      <button class="sp-q-btn active" onclick="showSpQ('sp-q1',this)">Quarter 1</button>
+      <button class="sp-q-btn"       onclick="showSpQ('sp-q2',this)">Quarter 2</button>
+      <button class="sp-q-btn"       onclick="showSpQ('sp-q3',this)">Quarter 3</button>
+      <button class="sp-q-btn"       onclick="showSpQ('sp-q4',this)">Quarter 4</button>
+    </div>
+    <div id="sp-q1" class="sp-panel active"><div class="sp-coming">Quarter 1 Skills Practice will appear here as files are added.</div></div>
+    <div id="sp-q2" class="sp-panel"><div class="sp-coming">Quarter 2 Skills Practice will appear here as files are added.</div></div>
+    <div id="sp-q3" class="sp-panel"><div class="sp-coming">Quarter 3 Skills Practice will appear here as files are added.</div></div>
+    <div id="sp-q4" class="sp-panel"><div class="sp-coming">Quarter 4 Skills Practice will appear here as files are added.</div></div>
+  </div>
+
+</div><!-- end .content -->
+
+<!-- ── Preview panel ── -->
+<div class="preview-panel" id="preview-panel">
+  <div class="preview-header">
+    <span class="preview-title" id="preview-title">Preview</span>
+    <a class="preview-dl" id="preview-dl" href="#">⬇ Download</a>
+    <button class="preview-close" onclick="closePreview()">✕</button>
+  </div>
+  <iframe class="preview-iframe" id="preview-iframe" src="" allowfullscreen></iframe>
+</div>
+
+</div><!-- end .page-layout -->
+
+<footer class="site-footer">
+  <div class="foot-credit">
+    Compiled &amp; Developed by <span style="color:#f4b942;font-family:'Lexend',sans-serif;">Dr. M. Kuh</span>
+    &nbsp;·&nbsp;
+    <a href="mailto:myungkuh@gmail.com" style="color:#f4b942;text-decoration:none;">myungkuh@gmail.com</a>
+  </div>
+  <div class="foot-line">Math Department Chair &nbsp;·&nbsp; South Seminole Academy · 26–27 School Year</div>
+</footer>
+
+<script>
+const SITE_ROOT = "https://mkuh-cmd.github.io/ssa-math-resources/";
+const enc = encodeURIComponent;
+
+// ── RAMP 6 base paths (Unit 1 reuses these files) ──
+const R6_SLIDE   = "3.%20Textbook/3.%20RAMP%206/1.%20Presentation%20Slide";
+const R6_STUDENT = "3.%20Textbook/3.%20RAMP%206/2.%20Student%20Pages";
+const R6_TEACHER = "3.%20Textbook/3.%20RAMP%206/3.%20Teacher%20Pages";
+const R6_BLANK   = "3.%20Textbook/3.%20RAMP%206/4.%20Practice%20Page/Blank";
+const R6_KEY     = "3.%20Textbook/3.%20RAMP%206/4.%20Practice%20Page/Key";
+
+// ── Quarter definitions ──
+const QUARTERS = [
+  { num: 1, label: 'Quarter 1' },
+  { num: 2, label: 'Quarter 2' },
+  { num: 3, label: 'Quarter 3' },
+  { num: 4, label: 'Quarter 4' }
+];
+
+// ── Unit 1 data (same as RAMP 6 Quarter 1) ──
+const UNIT1_GROUPS = [
+  {
+    sub: '6A · Unit 11 — Rational Numbers',
+    qFolder: 'Quarter 1',
+    lessons: [
+      { slideFile: "1. [6A] 11.8.pptx",  ref: "11.8",  name: "Evaluating Numeric Expressions – Part 1" },
+      { slideFile: "2. [6A] 11.9.pptx",  ref: "11.9",  name: "Evaluating Numeric Expressions – Part 2" },
+      { slideFile: "3. [6A] 11.1.pptx",  ref: "11.1",  name: "Adding Rational Numbers" },
+      { slideFile: "4. [6A] 11.2.pptx",  ref: "11.2",  name: "Subtracting Rational Numbers" },
+      { slideFile: "5. [6A] 11.3.pptx",  ref: "11.3",  name: "Multiplying Rational Numbers" },
+      { slideFile: "6. [6A] 11.4.pptx",  ref: "11.4",  name: "Dividing Rational Numbers" },
+      { slideFile: "7. [6A] 11.5.pptx",  ref: "11.5",  name: "Solving Real-World Problems with Rational Numbers – Part 1" },
+      { slideFile: "8. [6A] 11.6.pptx",  ref: "11.6",  name: "Solving Real-World Problems with Rational Numbers – Part 2" },
+      { slideFile: "9. [6A] 11.7.pptx",  ref: "11.7",  name: "Solving Real-World Problems with Rational Numbers – Part 3" }
+    ]
+  },
+  {
+    sub: '7A · Unit 1 — Equations & Inequalities',
+    qFolder: 'Quarter 1',
+    lessons: [
+      { slideFile: "10. [7A] 1.1.pptx",  ref: "1.1",  name: "Rewriting Numbers in Equivalent Forms" },
+      { slideFile: "11. [7A] 1.2.pptx",  ref: "1.2",  name: "Converting Between Repeating Decimals and Fractions" },
+      { slideFile: "12. [7A] 1.3.pptx",  ref: "1.3",  name: "Solving Two-Step Equations Using Properties of Equality" },
+      { slideFile: "13. [7A] 1.4.pptx",  ref: "1.4",  name: "Solving Two-Step Equations" },
+      { slideFile: "14. [7A] 1.5.pptx",  ref: "1.5",  name: "Solving Mathematical and Real-World Problems With Equations" },
+      { slideFile: "15. [7A] 1.6.pptx",  ref: "1.6",  name: "Writing Two-Step Equations From Real-World Contexts" },
+      { slideFile: "16. [7A] 1.7.pptx",  ref: "1.7",  name: "Writing and Solving Equations in Real-World Context" }
+    ]
+  },
+  {
+    sub: '6A · Unit 14 — Inequalities',
+    qFolder: 'Quarter 1',
+    lessons: [
+      { slideFile: "17. [6A] 14.9.pptx",  ref: "14.9",  name: "Solving One-Step Inequalities Using Addition and Subtraction" },
+      { slideFile: "18. [6A] 14.10.pptx", ref: "14.10", name: "Solving One-Step Inequalities Using Multiplication and Division" }
+    ]
+  },
+  {
+    sub: '7A · Unit 1 (cont.) — Equations & Inequalities',
+    qFolder: 'Quarter 1',
+    lessons: [
+      { slideFile: "19. [7A] 1.8.pptx",  ref: "1.8",  name: "Determining Solutions to Inequalities" },
+      { slideFile: "20. [7A] 1.9.pptx",  ref: "1.9",  name: "Solving Inequalities – Part 1" },
+      { slideFile: "21. [7A] 1.10.pptx", ref: "1.10", name: "Solving Inequalities – Part 2" }
+    ]
+  },
+  {
+    sub: '7A · Unit 2 — Real Number System',
+    qFolder: 'Quarter 1',
+    lessons: [
+      { slideFile: "22. [7A] 2.1.pptx",  ref: "2.1",  name: "Square Values" },
+      { slideFile: "23. [7A] 2.3.pptx",  ref: "2.3",  name: "Cube Values" },
+      { slideFile: "24. [7A] 2.2.pptx",  ref: "2.2",  name: "Square Values and Square Roots" },
+      { slideFile: "25. [7A] 2.4.pptx",  ref: "2.4",  name: "Approximating Irrational Numbers" },
+      { slideFile: "26. [7A] 2.5.pptx",  ref: "2.5",  name: "Rational and Irrational Numbers on the Number Line" },
+      { slideFile: "27. [7A] 2.6.pptx",  ref: "2.6",  name: "Plotting, Ordering, and Comparing Real Numbers" }
+    ]
+  }
+];
+
+function openPreview(relUrl, title) {
+  const fullUrl = SITE_ROOT + relUrl;
+  const isPptx  = relUrl.toLowerCase().includes('.pptx');
+  const viewUrl = isPptx
+    ? 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fullUrl)
+    : fullUrl;
+  document.getElementById('preview-iframe').src = viewUrl;
+  document.getElementById('preview-title').textContent = title;
+  const dl = document.getElementById('preview-dl');
+  dl.href = fullUrl;
+  if (isPptx) dl.setAttribute('download',''); else dl.removeAttribute('download');
+  document.getElementById('preview-panel').classList.add('open');
+}
+function closePreview() {
+  document.getElementById('preview-panel').classList.remove('open');
+  setTimeout(() => { document.getElementById('preview-iframe').src = ''; }, 300);
+}
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function showSpQ(id, btn) {
+  document.querySelectorAll('.sp-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tabs ~ * .sp-q-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Quarter filter ──
+function showQuarter(qNum, btn) {
+  document.querySelectorAll('.quarter-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#q-bar .sp-q-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('q-section-' + qNum).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── Build Unit Resources ──
+(function buildUnits() {
+  const qBar = document.getElementById('q-bar');
+  const wrap = document.getElementById('units-container');
+
+  QUARTERS.forEach(({ num, label }) => {
+    // Quarter button
+    const btn = document.createElement('button');
+    btn.className = 'sp-q-btn' + (num === 1 ? ' active' : '');
+    btn.textContent = label;
+    btn.onclick = function() { showQuarter(num, this); };
+    qBar.appendChild(btn);
+
+    // Quarter section
+    const section = document.createElement('div');
+    section.className = 'quarter-section' + (num === 1 ? ' active' : '');
+    section.id = 'q-section-' + num;
+
+    if (num === 1) {
+      // ── Unit 1: from RAMP 6 ──
+      let unitHtml = `<div class="unit-card"><div class="unit-heading">Unit 1 — Rational Numbers, Equations &amp; Inequalities, Real Number System</div>`;
+
+      UNIT1_GROUPS.forEach(group => {
+        const rows = group.lessons.map(L => {
+          const qf = enc(group.qFolder);
+          const slideUrl   = `${R6_SLIDE}/${qf}/${enc(L.slideFile)}`;
+          const studentUrl = `${R6_STUDENT}/${qf}/${enc(L.ref + '.pdf')}`;
+          const teacherUrl = `${R6_TEACHER}/${qf}/${enc(L.ref + '.pdf')}`;
+          const blankUrl   = `${R6_BLANK}/${qf}/${enc(L.ref + '.pdf')}`;
+          const keyUrl     = `${R6_KEY}/${qf}/${enc(L.ref + '.pdf')}`;
+          const lbl = `${L.ref} – ${L.name}`.replace(/'/g,"\\'");
+          return `<tr>
+            <td>${L.ref}</td>
+            <td class="lesson-name">${L.name}</td>
+            <td><button class="res-link lnk-slide"   onclick="openPreview('${slideUrl}',   '${lbl} · Slide')">Slide</button></td>
+            <td><button class="res-link lnk-student" onclick="openPreview('${studentUrl}', '${lbl} · Student')">Student</button></td>
+            <td><button class="res-link lnk-teacher" onclick="openPreview('${teacherUrl}', '${lbl} · Teacher')">Teacher</button></td>
+            <td><button class="res-link lnk-blank"   onclick="openPreview('${blankUrl}',   '${lbl} · Practice')">Practice</button></td>
+            <td><button class="res-link lnk-key"     onclick="openPreview('${keyUrl}',     '${lbl} · Key')">Key</button></td>
+          </tr>`;
+        }).join('');
+
+        unitHtml += `
+          <div class="unit-sub-heading">${group.sub}</div>
+          <table class="res-table">
+            <thead><tr>
+              <th>Ref</th><th class="lesson-name-h">Title</th>
+              <th>Slide</th><th>Student</th><th>Teacher</th><th>Practice</th><th>Key</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      });
+
+      unitHtml += `</div>`; // end unit-card
+
+      // Placeholders for Units 2 & 3
+      unitHtml += `
+        <div class="coming-soon"><strong>Unit 2</strong>Files will appear here once uploaded.</div>
+        <div class="coming-soon"><strong>Unit 3</strong>Files will appear here once uploaded.</div>`;
+
+      section.innerHTML = unitHtml;
+    } else {
+      section.innerHTML = `<div class="coming-soon"><strong>Quarter ${num}</strong>Materials will appear here as they are added.</div>`;
+    }
+
+    wrap.appendChild(section);
+  });
+})();
+</script>
+</body>
+</html>
