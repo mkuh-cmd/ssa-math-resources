@@ -189,6 +189,30 @@
   .site-footer .foot-brand { font-family:'Lexend',sans-serif; font-weight:700; color:#fff; font-size:0.85rem; }
   .site-footer .foot-line { color:rgba(255,255,255,0.55); font-size:0.75rem; margin-top:4px; }
   @media (max-width:480px){ .brand-sub{display:none;} }
+
+  /* ── Quarter section headers ── */
+  .quarter-section { margin: 22px 0 10px; }
+  .quarter-section:first-child { margin-top: 0; }
+  .quarter-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(90deg,#0c2244,#16335f);
+    color: #fff; border-radius: 8px;
+    padding: 8px 18px; margin-bottom: 12px;
+    font-family: 'Lexend', sans-serif; font-weight: 700; font-size: 0.9rem;
+    letter-spacing: 0.2px;
+  }
+  .quarter-label .q-badge {
+    background: #f4b942; color: #0c2244;
+    font-size: 0.72rem; font-weight: 800;
+    padding: 2px 8px; border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  /* Nav quarter divider */
+  .unit-nav-divider {
+    font-size: 0.67rem; font-weight: 800; color: #0c2244;
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 5px 4px; opacity: 0.6; white-space: nowrap; align-self: center;
+  }
 </style>
 </head>
 <body>
@@ -419,6 +443,14 @@ const LESSON_NAMES = {
 
 const unitLessons = {1:6,2:9,3:8,4:10,5:10,6:11,7:10,8:6,9:8,10:10,11:9,12:6,13:9};
 
+// ── Quarter groupings ──
+const QUARTERS = [
+  { num: 1, units: [1, 2, 3] },
+  { num: 2, units: [4, 5, 6] },
+  { num: 3, units: [7, 8, 9] },
+  { num: 4, units: [10, 11, 12, 13] }
+];
+
 function showTab(name, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -431,53 +463,68 @@ function showTab(name, btn) {
   const nav  = document.getElementById('unit-nav');
   const wrap = document.getElementById('units-container');
 
-  for (let u = 1; u <= 13; u++) {
-    const count = unitLessons[u];
-    const unitTitle = UNIT_NAMES[u] || '';
+  QUARTERS.forEach(({ num: qNum, units }) => {
+    // Quarter nav divider
+    nav.innerHTML += `<span class="unit-nav-divider">Q${qNum}:</span>`;
 
-    // Nav button
-    nav.innerHTML += `<button class="unit-nav-btn" onclick="document.getElementById('unit-${u}').scrollIntoView({behavior:'smooth'})">Unit ${u}</button>`;
-
-    // Build table rows
-    let rows = '';
-    for (let l = 1; l <= count; l++) {
-      const key        = `${u}.${l}`;
-      const lessonName = LESSON_NAMES[key] || '';
-      const slideUrl   = `${BASE}/${e('1. Presentation Slide')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pptx')}`;
-      const studentUrl = `${BASE}/${e('2. Student Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`;
-      const teacherUrl = `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [T].pdf')}`;
-      const blankUrl   = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P].pdf')}`;
-      const keyUrl     = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P.K].pdf')}`;
-
-      const label = `${key} – ${lessonName}`.replace(/'/g,"\\'");
-      rows += `<tr>
-        <td>${key}</td>
-        <td class="lesson-name">${lessonName}</td>
-        <td><button class="res-link lnk-slide"   onclick="openPreview('${slideUrl}',   '${label} · Slide')">Slide</button></td>
-        <td><button class="res-link lnk-student" onclick="openPreview('${studentUrl}', '${label} · Student')">Student</button></td>
-        <td><button class="res-link lnk-teacher" onclick="openPreview('${teacherUrl}', '${label} · Teacher')">Teacher</button></td>
-        <td><button class="res-link lnk-blank"   onclick="openPreview('${blankUrl}',   '${label} · Practice')">Practice</button></td>
-        <td><button class="res-link lnk-key"     onclick="openPreview('${keyUrl}',     '${label} · Key')">Key</button></td>
-      </tr>`;
-    }
-
-    wrap.innerHTML += `
-      <div class="unit-card" id="unit-${u}">
-        <div class="unit-heading">Unit ${u} — ${unitTitle}</div>
-        <table class="res-table">
-          <thead><tr>
-            <th>Lesson</th>
-            <th class="lesson-name-h">Title</th>
-            <th>Slide</th>
-            <th>Student</th>
-            <th>Teacher</th>
-            <th>Practice</th>
-            <th>Key</th>
-          </tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+    // Quarter section wrapper
+    let sectionHtml = `<div class="quarter-section" id="q${qNum}">
+      <div class="quarter-label">
+        <span class="q-badge">Q${qNum}</span>
+        Quarter ${qNum}
       </div>`;
-  }
+
+    units.forEach(u => {
+      const count = unitLessons[u];
+      const unitTitle = UNIT_NAMES[u] || '';
+
+      // Nav button
+      nav.innerHTML += `<button class="unit-nav-btn" onclick="document.getElementById('unit-${u}').scrollIntoView({behavior:'smooth'})">Unit ${u}</button>`;
+
+      // Build table rows
+      let rows = '';
+      for (let l = 1; l <= count; l++) {
+        const key        = `${u}.${l}`;
+        const lessonName = LESSON_NAMES[key] || '';
+        const slideUrl   = `${BASE}/${e('1. Presentation Slide')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pptx')}`;
+        const studentUrl = `${BASE}/${e('2. Student Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`;
+        const teacherUrl = `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [T].pdf')}`;
+        const blankUrl   = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P].pdf')}`;
+        const keyUrl     = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P.K].pdf')}`;
+
+        const label = `${key} – ${lessonName}`.replace(/'/g,"\\'");
+        rows += `<tr>
+          <td>${key}</td>
+          <td class="lesson-name">${lessonName}</td>
+          <td><button class="res-link lnk-slide"   onclick="openPreview('${slideUrl}',   '${label} · Slide')">Slide</button></td>
+          <td><button class="res-link lnk-student" onclick="openPreview('${studentUrl}', '${label} · Student')">Student</button></td>
+          <td><button class="res-link lnk-teacher" onclick="openPreview('${teacherUrl}', '${label} · Teacher')">Teacher</button></td>
+          <td><button class="res-link lnk-blank"   onclick="openPreview('${blankUrl}',   '${label} · Practice')">Practice</button></td>
+          <td><button class="res-link lnk-key"     onclick="openPreview('${keyUrl}',     '${label} · Key')">Key</button></td>
+        </tr>`;
+      }
+
+      sectionHtml += `
+        <div class="unit-card" id="unit-${u}">
+          <div class="unit-heading">Unit ${u} — ${unitTitle}</div>
+          <table class="res-table">
+            <thead><tr>
+              <th>Lesson</th>
+              <th class="lesson-name-h">Title</th>
+              <th>Slide</th>
+              <th>Student</th>
+              <th>Teacher</th>
+              <th>Practice</th>
+              <th>Key</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    });
+
+    sectionHtml += `</div>`; // end quarter-section
+    wrap.innerHTML += sectionHtml;
+  });
 })();
 
 // ── TAB 2: Assessments ──
