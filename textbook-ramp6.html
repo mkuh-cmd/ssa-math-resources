@@ -15,29 +15,26 @@
   header h1 { font-size: 1.6rem; font-weight: 700; }
   header p  { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
 
-  /* Tab bar */
+  /* ── Tabs ── */
   .tabs {
     display: flex; gap: 2px; background: #13305c;
     padding: 0 24px; overflow-x: auto;
   }
   .tab-btn {
     background: none; border: none; color: rgba(255,255,255,0.7);
-    padding: 12px 16px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+    padding: 12px 20px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
     white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s;
   }
   .tab-btn:hover { color: white; }
   .tab-btn.active { color: #f9c74f; border-bottom-color: #f9c74f; }
 
-  .content { max-width: 900px; margin: 0 auto; padding: 28px 24px; }
+  .content { max-width: 1100px; margin: 0 auto; padding: 24px; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
-  .section-label {
-    font-size: 0.78rem; font-weight: 700; color: #888;
-    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
-  }
+  .section-label { font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
 
-  /* Quarter switcher */
-  .q-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  /* ── Quarter switcher ── */
+  .q-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
   .q-btn {
     padding: 7px 18px; border: 2px solid #1a3a6b; border-radius: 20px;
     background: none; color: #1a3a6b; font-weight: 700; font-size: 0.82rem;
@@ -48,57 +45,91 @@
   .q-panel { display: none; }
   .q-panel.active { display: block; }
 
-  /* File list */
-  .file-list {
+  /* ── Unit card ── */
+  .unit-card {
     background: white; border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    overflow: hidden; margin-bottom: 14px;
+    scroll-margin-top: 20px;
   }
-  .file-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
-    text-decoration: none; color: #1a3a6b; font-size: 0.86rem; font-weight: 500;
-    transition: background 0.12s;
-  }
-  .file-item:last-child { border-bottom: none; }
-  .file-item:hover { background: #f0f4ff; color: #c0392b; }
-  .file-num { font-size: 0.7rem; font-weight: 800; color: #bbb; min-width: 24px; text-align: right; }
-  .lesson-ref-code { font-size: 0.72rem; font-weight: 700; color: #94a3b8; min-width: 36px; flex-shrink: 0; }
-  .book-badge {
-    font-size: 0.67rem; font-weight: 800; padding: 2px 7px; border-radius: 20px;
-    flex-shrink: 0;
-  }
-  .badge-6a { background: #dbeafe; color: #1d4ed8; }
-  .badge-7a { background: #dcfce7; color: #15803d; }
-  .lesson-label { flex: 1; }
-  .dl-icon { margin-left: auto; color: #aaa; font-size: 0.8rem; flex-shrink: 0; }
-
-  /* Unit group headings */
-  .unit-group { margin-bottom: 24px; }
   .unit-heading {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 16px 10px 0; margin-bottom: 6px;
-    border-bottom: 2px solid #e2e8f0;
-  }
-  .unit-number {
-    font-family: 'Lexend', sans-serif; font-size: 0.7rem; font-weight: 700;
-    color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em;
-    min-width: 54px;
-  }
-  .unit-title {
-    font-family: 'Lexend', sans-serif; font-size: 0.95rem; font-weight: 700;
-    color: #0c2244; flex: 1;
-  }
-  .unit-count {
-    font-size: 0.72rem; font-weight: 600; color: #94a3b8;
+    background: #1a3a6b; color: white;
+    padding: 10px 16px; font-weight: 700; font-size: 0.95rem;
   }
 
-  /* Coming soon */
+  /* ── Lesson resource table ── */
+  .res-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .res-table col.col-lesson  { width: 64px; }
+  .res-table col.col-title   { width: auto; }
+  .res-table col.col-link    { width: 72px; }
+  .res-table thead tr {
+    background: #f0f4ff; border-bottom: 2px solid #dde4f0;
+  }
+  .res-table thead th {
+    padding: 7px 10px; font-size: 0.72rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.05em; color: #555;
+    text-align: center;
+  }
+  .res-table thead th:first-child { text-align: left; padding-left: 16px; }
+  .res-table thead th.lesson-name-h { text-align: left; }
+  .res-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+  .res-table tbody tr:last-child { border-bottom: none; }
+  .res-table tbody tr:hover { background: #fafbff; }
+  .res-table td {
+    padding: 6px 10px; text-align: center; vertical-align: middle;
+    overflow: hidden;
+  }
+  .res-table td:first-child {
+    text-align: left; padding-left: 16px;
+    font-size: 0.82rem; font-weight: 600; color: #555;
+    white-space: nowrap;
+  }
+  .res-table td.lesson-name {
+    text-align: left; font-size: 0.81rem; font-weight: 400; color: #374151;
+    white-space: normal;
+  }
+  .res-table td.empty { color: #d1d5db; font-size: 0.8rem; }
+
+  /* ── Resource link pills ── */
+  .res-link {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 3px 9px; border-radius: 12px;
+    font-size: 0.75rem; font-weight: 600;
+    text-decoration: none; transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .res-link:hover { opacity: 0.75; }
+  .lnk-slide   { background: #dbeafe; color: #1d4ed8; }
+  .lnk-student { background: #dcfce7; color: #15803d; }
+  .lnk-teacher { background: #fef3c7; color: #92400e; }
+  .lnk-blank   { background: #f3e8ff; color: #7c3aed; }
+  .lnk-key     { background: #fee2e2; color: #b91c1c; }
+
+  /* ── Coming soon ── */
   .coming-soon {
     text-align: center; padding: 60px 20px; color: #aaa;
     background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
-  .coming-soon .cs-icon { font-size: 2rem; margin-bottom: 10px; }
   .coming-soon p { font-size: 0.9rem; }
+
+  /* ── Assessments ── */
+  .assess-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media(max-width:700px){ .assess-grid { grid-template-columns: 1fr; } }
+  .assess-col { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
+  .assess-header { padding: 9px 14px; font-weight: 700; font-size: 0.88rem; color: white; }
+  .blank-h  { background: #2c3e50; }
+  .key-h    { background: #27ae60; }
+  .guide-h  { background: #8e44ad; }
+  .assess-links { padding: 8px 14px 12px; }
+  .assess-links a { display: block; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
+  .assess-links a:last-child { border-bottom: none; }
+  .assess-links a:hover { color: #27ae60; }
+
+  @media(max-width:600px){
+    .res-table thead th:nth-child(n+3) { display: none; }
+    .res-table td:nth-child(n+3) { display: none; }
+    .res-table td.lesson-name { max-width: 140px; font-size: 0.75rem; }
+  }
 
   /* ═══ REDESIGN LAYER — SSA brand: deep navy + gold · Lexend/Inter ═══ */
   body { font-family:'Inter','Segoe UI',Arial,sans-serif; background:#f4f6f8; color:#182236; display:flex; flex-direction:column; min-height:100vh; }
@@ -116,6 +147,7 @@
   .tab-btn.active { color:#f4b942; border-bottom-color:#f4b942; }
   .q-btn { border-color:#0c2244; color:#0c2244; }
   .q-btn.active { background:#0c2244; color:#fff; }
+  .unit-heading { background:linear-gradient(90deg,#0c2244,#16335f); font-family:'Lexend',sans-serif; }
   .content { flex:1; width:100%; }
   .site-footer { margin-top:auto; padding:24px 24px 28px; background:#0c2244; text-align:center; }
   .site-footer .foot-brand { font-family:'Lexend',sans-serif; font-weight:700; color:#fff; font-size:0.85rem; }
@@ -134,28 +166,36 @@
 </nav>
 
 <header>
-  <h1>RAMP 6 — Textbook Presentation Slides</h1>
+  <h1>RAMP 6 — Textbook Curriculum</h1>
   <p>South Seminole Academy · Math Department · 26–27 School Year</p>
 </header>
 
 <nav class="tabs">
-  <button class="tab-btn active" onclick="showTab('slides',this)">Presentation Slides</button>
+  <button class="tab-btn active" onclick="showTab('units',this)">Unit Resources</button>
+  <button class="tab-btn"        onclick="showTab('assess',this)">Assessments</button>
 </nav>
 
 <div class="content">
 
-  <div id="tab-slides" class="tab-panel active">
-    <p class="section-label">Presentation Slides (.pptx) — click to download · Blue = 6A book · Green = 7A book</p>
+  <!-- ── TAB 1: Unit Resources ── -->
+  <div id="tab-units" class="tab-panel active">
+    <p class="section-label">All lesson resources by unit · Blue = 6A book · Green = 7A book</p>
 
     <div class="q-bar">
       <button class="q-btn active" onclick="showQ('q1',this)">Quarter 1</button>
-      <button class="q-btn"       onclick="showQ('q2',this)">Quarter 2</button>
-      <button class="q-btn"       onclick="showQ('q3',this)">Quarter 3</button>
+      <button class="q-btn"        onclick="showQ('q2',this)">Quarter 2</button>
+      <button class="q-btn"        onclick="showQ('q3',this)">Quarter 3</button>
     </div>
 
-    <div id="q1" class="q-panel active" id="q1-container"></div>
-    <div id="q2" class="q-panel"><div class="coming-soon"><p>Quarter 2 slides will appear here as they are added.</p></div></div>
-    <div id="q3" class="q-panel"><div class="coming-soon"><p>Quarter 3 slides will appear here as they are added.</p></div></div>
+    <div id="q1" class="q-panel active"></div>
+    <div id="q2" class="q-panel"><div class="coming-soon"><p>Quarter 2 resources will appear here as they are added.</p></div></div>
+    <div id="q3" class="q-panel"><div class="coming-soon"><p>Quarter 3 resources will appear here as they are added.</p></div></div>
+  </div>
+
+  <!-- ── TAB 2: Assessments ── -->
+  <div id="tab-assess" class="tab-panel">
+    <p class="section-label">Unit Assessments</p>
+    <div class="assess-grid" id="assess-grid"></div>
   </div>
 
 </div>
@@ -166,7 +206,13 @@
 </footer>
 
 <script>
-const BASE = "3.%20Textbook/3.%20RAMP%206/1.%20Presentation%20Slide";
+const SLIDE_BASE   = "3.%20Textbook/3.%20RAMP%206/1.%20Presentation%20Slide";
+const STUDENT_BASE = "3.%20Textbook/3.%20RAMP%206/2.%20Student%20Pages";
+const TEACHER_BASE = "3.%20Textbook/3.%20RAMP%206/3.%20Teacher%20Pages";
+const BLANK_BASE   = "3.%20Textbook/3.%20RAMP%206/4.%20Practice%20Page/Blank";
+const KEY_BASE     = "3.%20Textbook/3.%20RAMP%206/4.%20Practice%20Page/Key";
+const ASSESS_BASE  = "3.%20Textbook/3.%20RAMP%206/5.%20Unit%20Assessments";
+// Note: Student and Teacher pages use same folder pattern: {BASE}/{quarterFolder}/{ref}.pdf
 const enc = encodeURIComponent;
 
 function showTab(name, btn) {
@@ -183,112 +229,148 @@ function showQ(id, btn) {
   btn.classList.add('active');
 }
 
-// ─── Quarter 1 — grouped by unit ────────────────────────────────────────────
-// Each file entry: { file: filename, name: lesson title }
+// ─── Q1 Unit Data ────────────────────────────────────────────────────────────
+// slideFile: actual .pptx filename in Quarter 1 folder
+// ref:       lesson reference used for student/teacher/practice filenames
+// name:      lesson title from slide title page
+// book:      '6A' or '7A'
+// unit:      textbook unit folder name for teacher/practice pages
 const q1Units = [
   {
     unitNum: '6A · Unit 11',
     title: 'Rational Numbers',
-    files: [
-      { file: "1. [6A] 11.8.pptx",  name: "Evaluating Numeric Expressions – Part 1" },
-      { file: "2. [6A] 11.9.pptx",  name: "Evaluating Numeric Expressions – Part 2" },
-      { file: "3. [6A] 11.1.pptx",  name: "Adding Rational Numbers" },
-      { file: "4. [6A] 11.2.pptx",  name: "Subtracting Rational Numbers" },
-      { file: "5. [6A] 11.3.pptx",  name: "Multiplying Rational Numbers" },
-      { file: "6. [6A] 11.4.pptx",  name: "Dividing Rational Numbers" },
-      { file: "7. [6A] 11.5.pptx",  name: "Solving Real-World Problems with Rational Numbers – Part 1" },
-      { file: "8. [6A] 11.6.pptx",  name: "Solving Real-World Problems with Rational Numbers – Part 2" },
-      { file: "9. [6A] 11.7.pptx",  name: "Solving Real-World Problems with Rational Numbers – Part 3" }
+    lessons: [
+      { slideFile: "1. [6A] 11.8.pptx",  ref: "11.8",  name: "Evaluating Numeric Expressions – Part 1",                             book: "6A", unit: "Unit 11" },
+      { slideFile: "2. [6A] 11.9.pptx",  ref: "11.9",  name: "Evaluating Numeric Expressions – Part 2",                             book: "6A", unit: "Unit 11" },
+      { slideFile: "3. [6A] 11.1.pptx",  ref: "11.1",  name: "Adding Rational Numbers",                                             book: "6A", unit: "Unit 11" },
+      { slideFile: "4. [6A] 11.2.pptx",  ref: "11.2",  name: "Subtracting Rational Numbers",                                        book: "6A", unit: "Unit 11" },
+      { slideFile: "5. [6A] 11.3.pptx",  ref: "11.3",  name: "Multiplying Rational Numbers",                                        book: "6A", unit: "Unit 11" },
+      { slideFile: "6. [6A] 11.4.pptx",  ref: "11.4",  name: "Dividing Rational Numbers",                                           book: "6A", unit: "Unit 11" },
+      { slideFile: "7. [6A] 11.5.pptx",  ref: "11.5",  name: "Solving Real-World Problems with Rational Numbers – Part 1",          book: "6A", unit: "Unit 11" },
+      { slideFile: "8. [6A] 11.6.pptx",  ref: "11.6",  name: "Solving Real-World Problems with Rational Numbers – Part 2",          book: "6A", unit: "Unit 11" },
+      { slideFile: "9. [6A] 11.7.pptx",  ref: "11.7",  name: "Solving Real-World Problems with Rational Numbers – Part 3",          book: "6A", unit: "Unit 11" }
     ]
   },
   {
     unitNum: '7A · Unit 1',
     title: 'Equations & Inequalities',
-    files: [
-      { file: "10. [7A] 1.1.pptx",  name: "Rewriting Numbers in Equivalent Forms" },
-      { file: "11. [7A] 1.2.pptx",  name: "Converting Between Repeating Decimals and Fractions" },
-      { file: "12. [7A] 1.3.pptx",  name: "Solving Two-Step Equations Using Properties of Equality" },
-      { file: "13. [7A] 1.4.pptx",  name: "Solving Two-Step Equations" },
-      { file: "14. [7A] 1.5.pptx",  name: "Solving Mathematical and Real-World Problems With Equations" },
-      { file: "15. [7A] 1.6.pptx",  name: "Writing Two-Step Equations From Real-World Contexts" },
-      { file: "16. [7A] 1.7.pptx",  name: "Writing and Solving Equations in Real-World Context" }
+    lessons: [
+      { slideFile: "10. [7A] 1.1.pptx",  ref: "1.1",   name: "Rewriting Numbers in Equivalent Forms",                               book: "7A", unit: "Unit 1" },
+      { slideFile: "11. [7A] 1.2.pptx",  ref: "1.2",   name: "Converting Between Repeating Decimals and Fractions",                 book: "7A", unit: "Unit 1" },
+      { slideFile: "12. [7A] 1.3.pptx",  ref: "1.3",   name: "Solving Two-Step Equations Using Properties of Equality",             book: "7A", unit: "Unit 1" },
+      { slideFile: "13. [7A] 1.4.pptx",  ref: "1.4",   name: "Solving Two-Step Equations",                                          book: "7A", unit: "Unit 1" },
+      { slideFile: "14. [7A] 1.5.pptx",  ref: "1.5",   name: "Solving Mathematical and Real-World Problems With Equations",         book: "7A", unit: "Unit 1" },
+      { slideFile: "15. [7A] 1.6.pptx",  ref: "1.6",   name: "Writing Two-Step Equations From Real-World Contexts",                 book: "7A", unit: "Unit 1" },
+      { slideFile: "16. [7A] 1.7.pptx",  ref: "1.7",   name: "Writing and Solving Equations in Real-World Context",                 book: "7A", unit: "Unit 1" }
     ]
   },
   {
     unitNum: '6A · Unit 14',
     title: 'Inequalities',
-    files: [
-      { file: "17. [6A] 14.9.pptx",  name: "Solving One-Step Inequalities Using Addition and Subtraction" },
-      { file: "18. [6A] 14.10.pptx", name: "Solving One-Step Inequalities Using Multiplication and Division" }
+    lessons: [
+      { slideFile: "17. [6A] 14.9.pptx",  ref: "14.9",  name: "Solving One-Step Inequalities Using Addition and Subtraction",       book: "6A", unit: "Unit 14" },
+      { slideFile: "18. [6A] 14.10.pptx", ref: "14.10", name: "Solving One-Step Inequalities Using Multiplication and Division",     book: "6A", unit: "Unit 14" }
     ]
   },
   {
     unitNum: '7A · Unit 1 (cont.)',
     title: 'Equations & Inequalities',
-    files: [
-      { file: "19. [7A] 1.8.pptx",  name: "Determining Solutions to Inequalities" },
-      { file: "20. [7A] 1.9.pptx",  name: "Solving Inequalities – Part 1" },
-      { file: "21. [7A] 1.10.pptx", name: "Solving Inequalities – Part 2" }
+    lessons: [
+      { slideFile: "19. [7A] 1.8.pptx",  ref: "1.8",   name: "Determining Solutions to Inequalities",                               book: "7A", unit: "Unit 1" },
+      { slideFile: "20. [7A] 1.9.pptx",  ref: "1.9",   name: "Solving Inequalities – Part 1",                                       book: "7A", unit: "Unit 1" },
+      { slideFile: "21. [7A] 1.10.pptx", ref: "1.10",  name: "Solving Inequalities – Part 2",                                       book: "7A", unit: "Unit 1" }
     ]
   },
   {
     unitNum: '7A · Unit 2',
     title: 'Real Number System',
-    files: [
-      { file: "22. [7A] 2.1.pptx",  name: "Square Values" },
-      { file: "23. [7A] 2.3.pptx",  name: "Cube Values" },
-      { file: "24. [7A] 2.2.pptx",  name: "Square Values and Square Roots" },
-      { file: "25. [7A] 2.4.pptx",  name: "Approximating Irrational Numbers" },
-      { file: "26. [7A] 2.5.pptx",  name: "Rational and Irrational Numbers on the Number Line" },
-      { file: "27. [7A] 2.6.pptx",  name: "Plotting, Ordering, and Comparing Real Numbers" }
+    lessons: [
+      { slideFile: "22. [7A] 2.1.pptx",  ref: "2.1",   name: "Square Values",                                                       book: "7A", unit: "Unit 2" },
+      { slideFile: "23. [7A] 2.3.pptx",  ref: "2.3",   name: "Cube Values",                                                         book: "7A", unit: "Unit 2" },
+      { slideFile: "24. [7A] 2.2.pptx",  ref: "2.2",   name: "Square Values and Square Roots",                                      book: "7A", unit: "Unit 2" },
+      { slideFile: "25. [7A] 2.4.pptx",  ref: "2.4",   name: "Approximating Irrational Numbers",                                    book: "7A", unit: "Unit 2" },
+      { slideFile: "26. [7A] 2.5.pptx",  ref: "2.5",   name: "Rational and Irrational Numbers on the Number Line",                  book: "7A", unit: "Unit 2" },
+      { slideFile: "27. [7A] 2.6.pptx",  ref: "2.6",   name: "Plotting, Ordering, and Comparing Real Numbers",                      book: "7A", unit: "Unit 2" }
     ]
   }
 ];
 
-function buildUnits(containerId, units, quarterFolder) {
+function buildQuarter(containerId, units, quarterFolder) {
   const container = document.getElementById(containerId);
   units.forEach(unit => {
-    // Build heading
-    const heading = `<div class="unit-heading">
-      <span class="unit-number">${unit.unitNum}</span>
-      <span class="unit-title">${unit.title}</span>
-      <span class="unit-count">${unit.files.length} slides</span>
-    </div>`;
+    const rows = unit.lessons.map(L => {
+      const slideUrl   = `${SLIDE_BASE}/${enc(quarterFolder)}/${enc(L.slideFile)}`;
+      const studentUrl = `${STUDENT_BASE}/${enc(quarterFolder)}/${enc(L.ref + '.pdf')}`;
+      const teacherUrl = `${TEACHER_BASE}/${enc(quarterFolder)}/${enc(L.ref + '.pdf')}`;
+      const blankUrl   = `${BLANK_BASE}/${enc(quarterFolder)}/${enc(L.ref + '.pdf')}`;
+      const keyUrl     = `${KEY_BASE}/${enc(quarterFolder)}/${enc(L.ref + '.pdf')}`;
 
-    // Build file rows
-    const rows = unit.files.map(entry => {
-      const filename = entry.file;
-      const is6a = filename.includes('[6A]');
-      const is7a = filename.includes('[7A]');
-      const badgeCls = is6a ? 'badge-6a' : is7a ? 'badge-7a' : '';
-      const badgeText = is6a ? '6A' : is7a ? '7A' : '';
-      const lessonRef = filename.replace(/^\d+\.\s*\[\w+\]\s*/, '').replace('.pptx', '');
-      const num = filename.match(/^(\d+)\./)?.[1] ?? '';
-      const url = `${BASE}/${enc(quarterFolder)}/${enc(filename)}`;
-      return `<a class="file-item" href="${url}" download>
-        <span class="file-num">${num}</span>
-        <span class="lesson-ref-code">${lessonRef}</span>
-        <span class="lesson-label">${entry.name}</span>
-        ${badgeText ? `<span class="book-badge ${badgeCls}">${badgeText}</span>` : ''}
-        <span class="dl-icon">⬇</span>
-      </a>`;
+      return `<tr>
+        <td>${L.ref}</td>
+        <td class="lesson-name">${L.name}</td>
+        <td><a class="res-link lnk-slide"   href="${slideUrl}"   download>Slide</a></td>
+        <td><a class="res-link lnk-student" href="${studentUrl}" target="_blank">Student</a></td>
+        <td><a class="res-link lnk-teacher" href="${teacherUrl}" target="_blank">Teacher</a></td>
+        <td><a class="res-link lnk-blank"   href="${blankUrl}"   target="_blank">Practice</a></td>
+        <td><a class="res-link lnk-key"     href="${keyUrl}"     target="_blank">Key</a></td>
+      </tr>`;
     }).join('');
 
-    container.innerHTML += `<div class="unit-group">
-      ${heading}
-      <div class="file-list">${rows}</div>
-    </div>`;
+    container.innerHTML += `
+      <div class="unit-card">
+        <div class="unit-heading">${unit.unitNum} — ${unit.title}</div>
+        <table class="res-table">
+          <colgroup>
+            <col class="col-lesson">
+            <col class="col-title">
+            <col class="col-link">
+            <col class="col-link">
+            <col class="col-link">
+            <col class="col-link">
+            <col class="col-link">
+          </colgroup>
+          <thead><tr>
+            <th>Lesson</th>
+            <th class="lesson-name-h">Title</th>
+            <th>Slide</th>
+            <th>Student</th>
+            <th>Teacher</th>
+            <th>Practice</th>
+            <th>Key</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
   });
 }
 
-buildUnits('q1', q1Units, 'Quarter 1');
+buildQuarter('q1', q1Units, 'Quarter 1');
+
+// ── Assessments ──
+(function buildAssess() {
+  const grid = document.getElementById('assess-grid');
+  const AD = ASSESS_BASE;
+
+  const blanks = ["Unit 1 Assessment[blank].pdf","Unit 2 Assessment[blank].pdf","Unit 3 Assessment[blank].pdf","Unit 4 Assessment[blank].pdf","Unit 5 Assessment[blank].pdf","Unit 6 Assessment[blank].pdf","Unit 7 Assessment[blank].pdf","Unit 8 Assessment[blank].pdf","Unit 9 Assessment[blank].pdf","Unit 10 Assessment[blank].pdf","Unit 11 Assessment[blank].pdf","Unit 12 Assessment[blank].pdf","Unit 13 Assessment[blank].pdf"];
+  const keys   = ["Unit 1 Assessment [Key].pdf","Unit 2 Assessment [Key].pdf","Unit 3 Assessment [Key].pdf","Unit 4 Assessment [Key].pdf","Unit 5 Assessment [Key].pdf","Unit 6 Assessment [Key].pdf","Unit 7 Assessment [Key].pdf","Unit 8 Assessment [Key].pdf","Unit 9 Assessment [Key].pdf","Unit 10 Assessment [Key].pdf","Unit 11 Assessment [Key].pdf","Unit 12 Assessment [Key].pdf","Unit 13 Assessment [Key].pdf"];
+  const guides = ["Unit 1 Assessment [Guide].pdf","Unit 2 Assessment [Guide].pdf","Unit 3 Assessment [Guide].pdf","Unit 4 Assessment [Guide].pdf","Unit 5 Assessment [Guide].pdf","Unit 6 Assessment [Guide].pdf","Unit 7 Assessment [Guide].pdf","Unit 8 Assessment [Guide].pdf","Unit 9 Assessment [Guide].pdf","Unit 10 Assessment [Guide].pdf","Unit 11 Assessment [Guide].pdf","Unit 12 Assessment [Guide].pdf","Unit 13 Assessment [Guide].pdf"];
+
+  const blankLinks = blanks.map(f  => `<a href="${AD}/${enc('1. Blank')}/${enc(f)}" target="_blank">${f.replace('[blank]','').replace('.pdf','').trim()}</a>`).join('');
+  const keyLinks   = keys.map(f    => `<a href="${AD}/${enc('2. Key')}/${enc(f)}"   target="_blank">${f.replace('[Key]','Key').replace('.pdf','').trim()}</a>`).join('');
+  const guideLinks = guides.map(f  => `<a href="${AD}/${enc('3. Guide')}/${enc(f)}" target="_blank">${f.replace('[Guide]','Guide').replace('.pdf','').trim()}</a>`).join('');
+
+  grid.innerHTML = `
+    <div class="assess-col"><div class="assess-header blank-h">Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>
+    <div class="assess-col"><div class="assess-header key-h">Answer Keys</div><div class="assess-links">${keyLinks}</div></div>
+    <div class="assess-col"><div class="assess-header guide-h">Assessment Guides</div><div class="assess-links">${guideLinks}</div></div>`;
+})();
 
 /*
-  To add Quarter 2 later:
-  1. Add files to: 3. Textbook/3. RAMP 6/1. Presentation Slide/Quarter 2/
-  2. Define a q2Units array with the same structure as q1Units above
+  To add Quarter 2:
+  1. Add files to the relevant folders under Quarter 2/
+  2. Define a q2Units array matching the structure above
   3. Replace the Q2 "coming soon" div with: <div id="q2" class="q-panel"></div>
-  4. Call: buildUnits('q2', q2Units, 'Quarter 2')
+  4. Call: buildQuarter('q2', q2Units, 'Quarter 2')
 */
 </script>
 </body>
