@@ -490,7 +490,9 @@ function showQuarter(qNum, btn) {
         const lessonName = LESSON_NAMES[key] || '';
         const slideUrl   = `${BASE}/${e('1. Presentation Slide')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pptx')}`;
         const studentUrl = `${BASE}/${e('2. Student Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`;
-        const teacherUrl = `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [T].pdf')}`;
+        const teacherUrl = u === 9
+          ? `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`
+          : `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [T].pdf')}`;
         const blankUrl   = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P].pdf')}`;
         const keyUrl     = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P.K].pdf')}`;
 
