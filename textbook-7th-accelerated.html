@@ -276,25 +276,11 @@ const QUARTERS = [
   { num: 4, label: 'Quarter 4' }
 ];
 
-// ── Unit 1 data (same as RAMP 6 Quarter 1) ──
-const UNIT1_GROUPS = [
+// ── Q1 Unit data ──
+const UNITS_Q1 = [
   {
-    sub: '6A · Unit 11 — Rational Numbers',
-    qFolder: 'Quarter 1',
-    lessons: [
-      { slideFile: "1. [6A] 11.8.pptx",  ref: "11.8",  name: "Evaluating Numeric Expressions – Part 1" },
-      { slideFile: "2. [6A] 11.9.pptx",  ref: "11.9",  name: "Evaluating Numeric Expressions – Part 2" },
-      { slideFile: "3. [6A] 11.1.pptx",  ref: "11.1",  name: "Adding Rational Numbers" },
-      { slideFile: "4. [6A] 11.2.pptx",  ref: "11.2",  name: "Subtracting Rational Numbers" },
-      { slideFile: "5. [6A] 11.3.pptx",  ref: "11.3",  name: "Multiplying Rational Numbers" },
-      { slideFile: "6. [6A] 11.4.pptx",  ref: "11.4",  name: "Dividing Rational Numbers" },
-      { slideFile: "7. [6A] 11.5.pptx",  ref: "11.5",  name: "Solving Real-World Problems with Rational Numbers – Part 1" },
-      { slideFile: "8. [6A] 11.6.pptx",  ref: "11.6",  name: "Solving Real-World Problems with Rational Numbers – Part 2" },
-      { slideFile: "9. [6A] 11.7.pptx",  ref: "11.7",  name: "Solving Real-World Problems with Rational Numbers – Part 3" }
-    ]
-  },
-  {
-    sub: '7A · Unit 1 — Equations & Inequalities',
+    num: 1,
+    title: 'Equations & Inequalities',
     qFolder: 'Quarter 1',
     lessons: [
       { slideFile: "10. [7A] 1.1.pptx",  ref: "1.1",  name: "Rewriting Numbers in Equivalent Forms" },
@@ -303,28 +289,15 @@ const UNIT1_GROUPS = [
       { slideFile: "13. [7A] 1.4.pptx",  ref: "1.4",  name: "Solving Two-Step Equations" },
       { slideFile: "14. [7A] 1.5.pptx",  ref: "1.5",  name: "Solving Mathematical and Real-World Problems With Equations" },
       { slideFile: "15. [7A] 1.6.pptx",  ref: "1.6",  name: "Writing Two-Step Equations From Real-World Contexts" },
-      { slideFile: "16. [7A] 1.7.pptx",  ref: "1.7",  name: "Writing and Solving Equations in Real-World Context" }
-    ]
-  },
-  {
-    sub: '6A · Unit 14 — Inequalities',
-    qFolder: 'Quarter 1',
-    lessons: [
-      { slideFile: "17. [6A] 14.9.pptx",  ref: "14.9",  name: "Solving One-Step Inequalities Using Addition and Subtraction" },
-      { slideFile: "18. [6A] 14.10.pptx", ref: "14.10", name: "Solving One-Step Inequalities Using Multiplication and Division" }
-    ]
-  },
-  {
-    sub: '7A · Unit 1 (cont.) — Equations & Inequalities',
-    qFolder: 'Quarter 1',
-    lessons: [
+      { slideFile: "16. [7A] 1.7.pptx",  ref: "1.7",  name: "Writing and Solving Equations in Real-World Context" },
       { slideFile: "19. [7A] 1.8.pptx",  ref: "1.8",  name: "Determining Solutions to Inequalities" },
       { slideFile: "20. [7A] 1.9.pptx",  ref: "1.9",  name: "Solving Inequalities – Part 1" },
       { slideFile: "21. [7A] 1.10.pptx", ref: "1.10", name: "Solving Inequalities – Part 2" }
     ]
   },
   {
-    sub: '7A · Unit 2 — Real Number System',
+    num: 2,
+    title: 'Real Number System',
     qFolder: 'Quarter 1',
     lessons: [
       { slideFile: "22. [7A] 2.1.pptx",  ref: "2.1",  name: "Square Values" },
@@ -394,12 +367,11 @@ function showQuarter(qNum, btn) {
     section.id = 'q-section-' + num;
 
     if (num === 1) {
-      // ── Unit 1: from RAMP 6 ──
-      let unitHtml = `<div class="unit-card"><div class="unit-heading">Unit 1 — Rational Numbers, Equations &amp; Inequalities, Real Number System</div>`;
+      let sectionHtml = '';
 
-      UNIT1_GROUPS.forEach(group => {
-        const rows = group.lessons.map(L => {
-          const qf = enc(group.qFolder);
+      UNITS_Q1.forEach(unit => {
+        const qf = enc(unit.qFolder);
+        const rows = unit.lessons.map(L => {
           const slideUrl   = `${R6_SLIDE}/${qf}/${enc(L.slideFile)}`;
           const studentUrl = `${R6_STUDENT}/${qf}/${enc(L.ref + '.pdf')}`;
           const teacherUrl = `${R6_TEACHER}/${qf}/${enc(L.ref + '.pdf')}`;
@@ -417,25 +389,23 @@ function showQuarter(qNum, btn) {
           </tr>`;
         }).join('');
 
-        unitHtml += `
-          <div class="unit-sub-heading">${group.sub}</div>
-          <table class="res-table">
-            <thead><tr>
-              <th>Ref</th><th class="lesson-name-h">Title</th>
-              <th>Slide</th><th>Student</th><th>Teacher</th><th>Practice</th><th>Key</th>
-            </tr></thead>
-            <tbody>${rows}</tbody>
-          </table>`;
+        sectionHtml += `
+          <div class="unit-card">
+            <div class="unit-heading">Unit ${unit.num} — ${unit.title}</div>
+            <table class="res-table">
+              <thead><tr>
+                <th>Ref</th><th class="lesson-name-h">Title</th>
+                <th>Slide</th><th>Student</th><th>Teacher</th><th>Practice</th><th>Key</th>
+              </tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>`;
       });
 
-      unitHtml += `</div>`; // end unit-card
+      // Placeholder for Unit 3
+      sectionHtml += `<div class="coming-soon"><strong>Unit 3</strong>Files will appear here once uploaded.</div>`;
 
-      // Placeholders for Units 2 & 3
-      unitHtml += `
-        <div class="coming-soon"><strong>Unit 2</strong>Files will appear here once uploaded.</div>
-        <div class="coming-soon"><strong>Unit 3</strong>Files will appear here once uploaded.</div>`;
-
-      section.innerHTML = unitHtml;
+      section.innerHTML = sectionHtml;
     } else {
       section.innerHTML = `<div class="coming-soon"><strong>Quarter ${num}</strong>Materials will appear here as they are added.</div>`;
     }
