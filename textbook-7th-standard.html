@@ -241,8 +241,7 @@
 
   <!-- ── TAB 1: Unit Resources ── -->
   <div id="tab-units" class="tab-panel active">
-    <p class="section-label">All lesson resources by unit — Slides · Student · Teacher · Practice (Blank &amp; Key)</p>
-    <div class="unit-nav" id="unit-nav"></div>
+    <div class="sp-q-bar" id="q-bar"></div>
     <div id="units-container"></div>
   </div>
 
@@ -459,30 +458,33 @@ function showTab(name, btn) {
 }
 
 // ── TAB 1: Unit Resources ──
+function showQuarter(qNum, btn) {
+  document.querySelectorAll('.quarter-section').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('#q-bar .sp-q-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('q-section-' + qNum).style.display = 'block';
+  if (btn) btn.classList.add('active');
+}
+
 (function buildUnits() {
-  const nav  = document.getElementById('unit-nav');
+  const qBar = document.getElementById('q-bar');
   const wrap = document.getElementById('units-container');
 
   QUARTERS.forEach(({ num: qNum, units }) => {
-    // Quarter nav divider
-    nav.innerHTML += `<span class="unit-nav-divider">Q${qNum}:</span>`;
+    // Quarter filter button
+    const btn = document.createElement('button');
+    btn.className = 'sp-q-btn' + (qNum === 1 ? ' active' : '');
+    btn.textContent = 'Quarter ' + qNum;
+    btn.onclick = function() { showQuarter(qNum, this); };
+    qBar.appendChild(btn);
 
-    // Quarter section wrapper
-    let sectionHtml = `<div class="quarter-section" id="q${qNum}">
-      <div class="quarter-label">
-        <span class="q-badge">Q${qNum}</span>
-        Quarter ${qNum}
-      </div>`;
+    // Quarter section (hidden except Q1)
+    let sectionHtml = `<div class="quarter-section" id="q-section-${qNum}" style="display:${qNum===1?'block':'none'}">`;
 
     units.forEach(u => {
       const count = unitLessons[u];
       const unitTitle = UNIT_NAMES[u] || '';
-
-      // Nav button
-      nav.innerHTML += `<button class="unit-nav-btn" onclick="document.getElementById('unit-${u}').scrollIntoView({behavior:'smooth'})">Unit ${u}</button>`;
-
-      // Build table rows
       let rows = '';
+
       for (let l = 1; l <= count; l++) {
         const key        = `${u}.${l}`;
         const lessonName = LESSON_NAMES[key] || '';
@@ -509,20 +511,15 @@ function showTab(name, btn) {
           <div class="unit-heading">Unit ${u} — ${unitTitle}</div>
           <table class="res-table">
             <thead><tr>
-              <th>Lesson</th>
-              <th class="lesson-name-h">Title</th>
-              <th>Slide</th>
-              <th>Student</th>
-              <th>Teacher</th>
-              <th>Practice</th>
-              <th>Key</th>
+              <th>Lesson</th><th class="lesson-name-h">Title</th>
+              <th>Slide</th><th>Student</th><th>Teacher</th><th>Practice</th><th>Key</th>
             </tr></thead>
             <tbody>${rows}</tbody>
           </table>
         </div>`;
     });
 
-    sectionHtml += `</div>`; // end quarter-section
+    sectionHtml += `</div>`;
     wrap.innerHTML += sectionHtml;
   });
 })();
