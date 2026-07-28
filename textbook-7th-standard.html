@@ -160,7 +160,31 @@
   .unit-heading { background:linear-gradient(90deg,#0c2244,#16335f); font-family:'Lexend',sans-serif; }
   .unit-nav-btn, .sp-q-btn { border-color:#0c2244; color:#0c2244; }
   .unit-nav-btn:hover, .sp-q-btn.active { background:#0c2244; color:#fff; }
-  .content { flex:1; width:100%; }
+  button.res-link { border: none; cursor: pointer; font-family: inherit; }
+  .page-layout { display:flex; align-items:flex-start; flex:1; overflow:hidden; }
+  .content { flex:1; min-width:0; overflow-y:auto; max-height:calc(100vh - 57px); }
+  /* ── Slide/Resource preview panel ── */
+  .preview-panel {
+    width:0; overflow:hidden; flex-shrink:0;
+    transition:width 0.3s ease;
+    position:sticky; top:57px;
+    height:calc(100vh - 57px);
+    display:flex; flex-direction:column;
+    background:#fff; border-left:2px solid #e2e8f0;
+    box-shadow:-4px 0 20px rgba(0,0,0,0.08);
+  }
+  .preview-panel.open { width:46%; min-width:380px; }
+  .preview-header {
+    display:flex; align-items:center; gap:8px;
+    padding:10px 14px; flex-shrink:0;
+    background:linear-gradient(90deg,#0c2244,#16335f);
+  }
+  .preview-title { color:#fff; font-family:'Lexend',sans-serif; font-size:0.8rem; font-weight:600; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .preview-dl { display:inline-flex; align-items:center; gap:4px; padding:5px 11px; border-radius:8px; background:#f4b942; color:#0c2244; font-size:0.74rem; font-weight:700; text-decoration:none; flex-shrink:0; }
+  .preview-close { background:rgba(255,255,255,0.15); border:none; color:#fff; border-radius:6px; width:28px; height:28px; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .preview-close:hover { background:rgba(255,255,255,0.28); }
+  .preview-iframe { flex:1; border:none; width:100%; }
+  @media(max-width:900px){ .preview-panel.open { width:100%; min-width:0; position:fixed; top:57px; right:0; bottom:0; z-index:40; } }
   .site-footer { margin-top:auto; padding:24px 24px 28px; background:#0c2244; text-align:center; }
   .site-footer .foot-brand { font-family:'Lexend',sans-serif; font-weight:700; color:#fff; font-size:0.85rem; }
   .site-footer .foot-line { color:rgba(255,255,255,0.55); font-size:0.75rem; margin-top:4px; }
@@ -188,6 +212,7 @@
   <button class="tab-btn"        onclick="showTab('sp',this)">Skills Practice</button>
 </nav>
 
+<div class="page-layout">
 <div class="content">
 
   <!-- ── TAB 1: Unit Resources ── -->
@@ -217,7 +242,19 @@
     <div id="sp-q4" class="sp-panel"><div class="sp-coming">Quarter 4 materials will appear here as they are added.</div></div>
   </div>
 
+</div><!-- end .content -->
+
+<!-- ── Slide/Resource preview panel ── -->
+<div class="preview-panel" id="preview-panel">
+  <div class="preview-header">
+    <span class="preview-title" id="preview-title">Preview</span>
+    <a class="preview-dl" id="preview-dl" href="#" download>⬇ Download</a>
+    <button class="preview-close" onclick="closePreview()">✕</button>
+  </div>
+  <iframe class="preview-iframe" id="preview-iframe" src="" allowfullscreen></iframe>
 </div>
+
+</div><!-- end .page-layout -->
 
 <footer class="site-footer">
   <div class="foot-brand">SSA Math Hub</div>
@@ -225,8 +262,27 @@
 </footer>
 
 <script>
+const SITE_ROOT = "https://mkuh-cmd.github.io/ssa-math-resources/";
 const BASE = "3.%20Textbook/4.%207th%20Standard";
 const e = encodeURIComponent;
+
+function openPreview(relUrl, title) {
+  const fullUrl = SITE_ROOT + relUrl;
+  const isPptx  = relUrl.toLowerCase().includes('.pptx');
+  const viewUrl = isPptx
+    ? 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fullUrl)
+    : fullUrl;
+  document.getElementById('preview-iframe').src = viewUrl;
+  document.getElementById('preview-title').textContent = title;
+  const dl = document.getElementById('preview-dl');
+  dl.href = fullUrl;
+  if (isPptx) { dl.setAttribute('download',''); } else { dl.removeAttribute('download'); }
+  document.getElementById('preview-panel').classList.add('open');
+}
+function closePreview() {
+  document.getElementById('preview-panel').classList.remove('open');
+  setTimeout(() => { document.getElementById('preview-iframe').src = ''; }, 300);
+}
 
 // ── Unit titles (derived from slide title pages) ──
 const UNIT_NAMES = {
@@ -393,14 +449,15 @@ function showTab(name, btn) {
       const blankUrl   = `${BASE}/${e('4. Practice Page')}/${e('Blank')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P].pdf')}`;
       const keyUrl     = `${BASE}/${e('4. Practice Page')}/${e('Key')}/${e('Unit '+u)}/${e('Lesson '+u+'.'+l+' [P.K].pdf')}`;
 
+      const label = `${key} – ${lessonName}`.replace(/'/g,"\\'");
       rows += `<tr>
         <td>${key}</td>
         <td class="lesson-name">${lessonName}</td>
-        <td><a class="res-link lnk-slide"   href="${slideUrl}"   download>Slide</a></td>
-        <td><a class="res-link lnk-student" href="${studentUrl}" target="_blank">Student</a></td>
-        <td><a class="res-link lnk-teacher" href="${teacherUrl}" target="_blank">Teacher</a></td>
-        <td><a class="res-link lnk-blank"   href="${blankUrl}"   target="_blank">Blank</a></td>
-        <td><a class="res-link lnk-key"     href="${keyUrl}"     target="_blank">Key</a></td>
+        <td><button class="res-link lnk-slide"   onclick="openPreview('${slideUrl}',   '${label} · Slide')">Slide</button></td>
+        <td><button class="res-link lnk-student" onclick="openPreview('${studentUrl}', '${label} · Student')">Student</button></td>
+        <td><button class="res-link lnk-teacher" onclick="openPreview('${teacherUrl}', '${label} · Teacher')">Teacher</button></td>
+        <td><button class="res-link lnk-blank"   onclick="openPreview('${blankUrl}',   '${label} · Practice')">Practice</button></td>
+        <td><button class="res-link lnk-key"     onclick="openPreview('${keyUrl}',     '${label} · Key')">Key</button></td>
       </tr>`;
     }
 
