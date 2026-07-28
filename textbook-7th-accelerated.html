@@ -261,12 +261,19 @@
 const SITE_ROOT = "https://mkuh-cmd.github.io/ssa-math-resources/";
 const enc = encodeURIComponent;
 
-// ── RAMP 6 base paths (Unit 1 reuses these files) ──
+// ── RAMP 6 base paths (Units 1 & 2 reuse these files) ──
 const R6_SLIDE   = "3.%20Textbook/3.%20RAMP%206/1.%20Presentation%20Slide";
 const R6_STUDENT = "3.%20Textbook/3.%20RAMP%206/2.%20Student%20Pages";
 const R6_TEACHER = "3.%20Textbook/3.%20RAMP%206/3.%20Teacher%20Pages";
 const R6_BLANK   = "3.%20Textbook/3.%20RAMP%206/4.%20Practice%20Page/Blank";
 const R6_KEY     = "3.%20Textbook/3.%20RAMP%206/4.%20Practice%20Page/Key";
+
+// ── 7th Accelerated own file paths (Unit 3+) ──
+const A7_SLIDE   = "3.%20Textbook/5.%207th%20Accelerated/1.%20Presentation%20Slide";
+const A7_STUDENT = "3.%20Textbook/5.%207th%20Accelerated/2.%20Student%20Pages";
+const A7_TEACHER = "3.%20Textbook/5.%207th%20Accelerated/3.%20Teacher%20Pages";
+const A7_BLANK   = "3.%20Textbook/5.%207th%20Accelerated/4.%20Practice%20Page/Blank";
+const A7_KEY     = "3.%20Textbook/5.%207th%20Accelerated/4.%20Practice%20Page/Key";
 
 // ── Quarter definitions ──
 const QUARTERS = [
@@ -282,6 +289,7 @@ const UNITS_Q1 = [
     num: 1,
     title: 'Equations & Inequalities',
     qFolder: 'Quarter 1',
+    paths: { slide: R6_SLIDE, student: R6_STUDENT, teacher: R6_TEACHER, blank: R6_BLANK, key: R6_KEY },
     lessons: [
       { slideFile: "10. [7A] 1.1.pptx",  ref: "1.1",  name: "Rewriting Numbers in Equivalent Forms" },
       { slideFile: "11. [7A] 1.2.pptx",  ref: "1.2",  name: "Converting Between Repeating Decimals and Fractions" },
@@ -299,6 +307,7 @@ const UNITS_Q1 = [
     num: 2,
     title: 'Real Number System',
     qFolder: 'Quarter 1',
+    paths: { slide: R6_SLIDE, student: R6_STUDENT, teacher: R6_TEACHER, blank: R6_BLANK, key: R6_KEY },
     lessons: [
       { slideFile: "22. [7A] 2.1.pptx",  ref: "2.1",  name: "Square Values" },
       { slideFile: "23. [7A] 2.3.pptx",  ref: "2.3",  name: "Cube Values" },
@@ -306,6 +315,23 @@ const UNITS_Q1 = [
       { slideFile: "25. [7A] 2.4.pptx",  ref: "2.4",  name: "Approximating Irrational Numbers" },
       { slideFile: "26. [7A] 2.5.pptx",  ref: "2.5",  name: "Rational and Irrational Numbers on the Number Line" },
       { slideFile: "27. [7A] 2.6.pptx",  ref: "2.6",  name: "Plotting, Ordering, and Comparing Real Numbers" }
+    ]
+  },
+  {
+    num: 3,
+    title: 'Unit 3',
+    qFolder: 'Quarter 1',
+    paths: { slide: A7_SLIDE, student: A7_STUDENT, teacher: A7_TEACHER, blank: A7_BLANK, key: A7_KEY },
+    lessons: [
+      { slideFile: "3.1.pptx", ref: "3.1", name: "Lesson 3.1" },
+      { slideFile: "3.2.pptx", ref: "3.2", name: "Lesson 3.2" },
+      { slideFile: "3.3.pptx", ref: "3.3", name: "Lesson 3.3" },
+      { slideFile: "3.4.pptx", ref: "3.4", name: "Lesson 3.4" },
+      { slideFile: "3.5.pptx", ref: "3.5", name: "Lesson 3.5" },
+      { slideFile: "3.6.pptx", ref: "3.6", name: "Lesson 3.6" },
+      { slideFile: "3.7.pptx", ref: "3.7", name: "Lesson 3.7" },
+      { slideFile: "3.8.pptx", ref: "3.8", name: "Lesson 3.8" },
+      { slideFile: "3.9.pptx", ref: "3.9", name: "Lesson 3.9" }
     ]
   }
 ];
@@ -371,12 +397,13 @@ function showQuarter(qNum, btn) {
 
       UNITS_Q1.forEach(unit => {
         const qf = enc(unit.qFolder);
+        const p  = unit.paths;
         const rows = unit.lessons.map(L => {
-          const slideUrl   = `${R6_SLIDE}/${qf}/${enc(L.slideFile)}`;
-          const studentUrl = `${R6_STUDENT}/${qf}/${enc(L.ref + '.pdf')}`;
-          const teacherUrl = `${R6_TEACHER}/${qf}/${enc(L.ref + '.pdf')}`;
-          const blankUrl   = `${R6_BLANK}/${qf}/${enc(L.ref + '.pdf')}`;
-          const keyUrl     = `${R6_KEY}/${qf}/${enc(L.ref + '.pdf')}`;
+          const slideUrl   = `${p.slide}/${qf}/${enc(L.slideFile)}`;
+          const studentUrl = `${p.student}/${qf}/${enc(L.ref + '.pdf')}`;
+          const teacherUrl = `${p.teacher}/${qf}/${enc(L.ref + '.pdf')}`;
+          const blankUrl   = `${p.blank}/${qf}/${enc(L.ref + '.pdf')}`;
+          const keyUrl     = `${p.key}/${qf}/${enc(L.ref + '.pdf')}`;
           const lbl = `${L.ref} – ${L.name}`.replace(/'/g,"\\'");
           return `<tr>
             <td>${L.ref}</td>
@@ -401,9 +428,6 @@ function showQuarter(qNum, btn) {
             </table>
           </div>`;
       });
-
-      // Placeholder for Unit 3
-      sectionHtml += `<div class="coming-soon"><strong>Unit 3</strong>Files will appear here once uploaded.</div>`;
 
       section.innerHTML = sectionHtml;
     } else {
