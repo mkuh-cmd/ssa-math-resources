@@ -859,9 +859,11 @@ function pickResource(type) {
 
   else if (type === 'textbook') {
     var tbLinks = {
-      g7:   { url: 'textbook-7th-standard.html',     note: 'Available — 13 Units' },
-      g7a:  { url: 'textbook-7th-accelerated.html',  note: 'Available — Units 1–3 (Q1)' },
-      gr6:  { url: 'textbook-ramp6.html',             note: 'Available — Presentation Slides · Q1' }
+      g7:    { url: 'textbook-7th-standard.html',        note: 'Available — 13 Units' },
+      g7a:   { url: 'textbook-7th-accelerated.html',     note: 'Available — Units 1–3 (Q1)' },
+      gr6:   { url: 'textbook-ramp6.html',                note: 'Available — Presentation Slides · Q1' },
+      g8alg: { url: 'textbook-algebra1-mathnation.html', note: 'Available — Math Nation, 14 Units' },
+      g8geo: { url: 'textbook-geometry-mathnation.html', note: 'Available — Math Nation, 13 Units' }
     };
     var tb = tbLinks[c.id];
     if (tb) {
