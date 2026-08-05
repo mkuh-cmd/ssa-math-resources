@@ -109,9 +109,9 @@
   .key-h    { background: #27ae60; }
   .guide-h  { background: #8e44ad; }
   .assess-links { padding: 8px 14px 12px; }
-  .assess-links a { display: block; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
-  .assess-links a:last-child { border-bottom: none; }
-  .assess-links a:hover { color: #27ae60; }
+  .assess-links a, .assess-links button { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-family: inherit; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
+  .assess-links a:last-child, .assess-links button:last-child { border-bottom: none; }
+  .assess-links a:hover, .assess-links button:hover { color: #27ae60; }
 
   /* ── Skills Practice ── */
   .sp-q-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -126,8 +126,10 @@
   .sp-panel.active { display: block; }
   .sp-file-list { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
   .sp-file-item {
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 10px; width: 100%;
     padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
+    border-left: none; border-right: none; border-top: none;
+    background: none; cursor: pointer; font-family: inherit; text-align: left;
     text-decoration: none; color: #1a3a6b; font-size: 0.85rem; font-weight: 500;
     transition: background 0.12s;
   }
@@ -561,9 +563,9 @@ function showQuarter(qNum, btn) {
     "Unit 12 Assessment [Guide].pdf","Unit 13 Assessment [Guide].pdf"
   ];
 
-  const blankLinks  = blanks.map(f  => `<a href="${AD}/${e('1. Blank')}/${e(f)}"  target="_blank">${f.replace('[blank]','').replace('.pdf','').trim()}</a>`).join('');
-  const keyLinks    = keys.map(f    => `<a href="${AD}/${e('2. Key')}/${e(f)}"    target="_blank">${f.replace('[Key]','Key').replace('.pdf','').replace(/\s+/g,' ').trim()}</a>`).join('');
-  const guideLinks  = guides.map(f  => `<a href="${AD}/${e('3. Guide')}/${e(f)}"  target="_blank">${f.replace('[Guide]','Guide').replace('.pdf','').trim()}</a>`).join('');
+  const blankLinks  = blanks.map(f  => { const lbl = f.replace('[blank]','').replace('.pdf','').trim(); return `<button onclick="openPreview('${AD}/${e('1. Blank')}/${e(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
+  const keyLinks    = keys.map(f    => { const lbl = f.replace('[Key]','Key').replace('.pdf','').replace(/\s+/g,' ').trim(); return `<button onclick="openPreview('${AD}/${e('2. Key')}/${e(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
+  const guideLinks  = guides.map(f  => { const lbl = f.replace('[Guide]','Guide').replace('.pdf','').trim(); return `<button onclick="openPreview('${AD}/${e('3. Guide')}/${e(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
 
   grid.innerHTML = `
     <div class="assess-col"><div class="assess-header blank-h">Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>
@@ -593,11 +595,11 @@ function showSpQ(q, btn) {
     files.forEach((filename, idx) => {
       const label = filename.replace(/^\d+\.\s*/, '').replace('.pdf', '');
       const url = `${SP_BASE}/${e('7th Grade Standard')}/${e(quarter)}/${e(filename)}`;
-      list.innerHTML += `<a class="sp-file-item" href="${url}" target="_blank">
+      list.innerHTML += `<button class="sp-file-item" onclick="openPreview('${url}', '${label.replace(/'/g,"\\'")}')">
         <span class="sp-num">${idx + 1}</span>
         <span>${label}</span>
         <span class="sp-badge">SP</span>
-      </a>`;
+      </button>`;
     });
   }
 
