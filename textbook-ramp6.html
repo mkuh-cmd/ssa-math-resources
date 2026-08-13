@@ -122,9 +122,9 @@
   .key-h    { background: #27ae60; }
   .guide-h  { background: #8e44ad; }
   .assess-links { padding: 8px 14px 12px; }
-  .assess-links a { display: block; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
-  .assess-links a:last-child { border-bottom: none; }
-  .assess-links a:hover { color: #27ae60; }
+  .assess-links a, .assess-links button { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-family: inherit; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
+  .assess-links a:last-child, .assess-links button:last-child { border-bottom: none; }
+  .assess-links a:hover, .assess-links button:hover { color: #27ae60; }
 
   @media(max-width:600px){
     .res-table thead th:nth-child(n+3) { display: none; }
@@ -412,9 +412,9 @@ buildQuarter('q1', q1Units, 'Quarter 1');
   const keys   = ["Unit 1 Assessment [Key].pdf","Unit 2 Assessment [Key].pdf","Unit 3 Assessment [Key].pdf","Unit 4 Assessment [Key].pdf","Unit 5 Assessment [Key].pdf","Unit 6 Assessment [Key].pdf","Unit 7 Assessment [Key].pdf","Unit 8 Assessment [Key].pdf","Unit 9 Assessment [Key].pdf","Unit 10 Assessment [Key].pdf","Unit 11 Assessment [Key].pdf","Unit 12 Assessment [Key].pdf","Unit 13 Assessment [Key].pdf"];
   const guides = ["Unit 1 Assessment [Guide].pdf","Unit 2 Assessment [Guide].pdf","Unit 3 Assessment [Guide].pdf","Unit 4 Assessment [Guide].pdf","Unit 5 Assessment [Guide].pdf","Unit 6 Assessment [Guide].pdf","Unit 7 Assessment [Guide].pdf","Unit 8 Assessment [Guide].pdf","Unit 9 Assessment [Guide].pdf","Unit 10 Assessment [Guide].pdf","Unit 11 Assessment [Guide].pdf","Unit 12 Assessment [Guide].pdf","Unit 13 Assessment [Guide].pdf"];
 
-  const blankLinks = blanks.map(f  => `<a href="${AD}/${enc('1. Blank')}/${enc(f)}" target="_blank">${f.replace('[blank]','').replace('.pdf','').trim()}</a>`).join('');
-  const keyLinks   = keys.map(f    => `<a href="${AD}/${enc('2. Key')}/${enc(f)}"   target="_blank">${f.replace('[Key]','Key').replace('.pdf','').trim()}</a>`).join('');
-  const guideLinks = guides.map(f  => `<a href="${AD}/${enc('3. Guide')}/${enc(f)}" target="_blank">${f.replace('[Guide]','Guide').replace('.pdf','').trim()}</a>`).join('');
+  const blankLinks = blanks.map(f  => { const lbl = f.replace('[blank]','').replace('.pdf','').trim(); return `<button onclick="openPreview('${AD}/${enc('1. Blank')}/${enc(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
+  const keyLinks   = keys.map(f    => { const lbl = f.replace('[Key]','Key').replace('.pdf','').trim(); return `<button onclick="openPreview('${AD}/${enc('2. Key')}/${enc(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
+  const guideLinks = guides.map(f  => { const lbl = f.replace('[Guide]','Guide').replace('.pdf','').trim(); return `<button onclick="openPreview('${AD}/${enc('3. Guide')}/${enc(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
 
   grid.innerHTML = `
     <div class="assess-col"><div class="assess-header blank-h">Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>

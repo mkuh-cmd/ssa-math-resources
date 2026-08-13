@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -307,6 +308,7 @@ body.previewing #preview { display: block; max-width: 800px; margin: 0 auto; pad
     <button class="home-primary" id="newPlanBtn" type="button">＋ New Weekly Plan</button>
     <button id="homeOpenFile" type="button">Open draft file…</button>
     <button id="homeSchedBtn" type="button" title="Period length, block days, and periods per day">⚙ Schedule Settings</button>
+    <button id="gAuthBtnHome" type="button" class="hidden" title="Sign in to sync your plans across devices"><span class="g-lbl">Sign in with Google</span></button>
   </div>
   <div class="home-body">
     <aside class="home-side">
@@ -375,6 +377,10 @@ body.previewing #preview { display: block; max-width: 800px; margin: 0 auto; pad
     <button id="schedBtn" type="button" title="My schedule — period length, block days, periods per day">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
       Schedule</button>
+    <span class="tb-sep"></span>
+    <button id="gAuthBtn" type="button" class="hidden" title="Sign in to sync your plans across devices">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="g-lbl">Sign in</span></button>
     <span class="tb-status" id="saveState"></span>
   </div>
 
@@ -582,6 +588,12 @@ body.previewing #preview { display: block; max-width: 800px; margin: 0 auto; pad
 <div id="toast"></div>
 
 <script>
+/* ═══ GOOGLE SIGN-IN (optional cloud sync via Google Drive) ═══
+   Paste your OAuth 2.0 Client ID below to turn on "Sign in with Google".
+   Setup steps: see google-signin-setup.md in this folder.
+   Leave empty ("") and the app works locally exactly as before. */
+const GOOGLE_CLIENT_ID = ""; // e.g. "1234567890-abc123.apps.googleusercontent.com"
+
 /* ═══════════ DATA ═══════════ */
 const SUBJECTS = {
   "Mathematics": { criteria: ["Knowing and understanding","Investigating patterns","Communicating","Applying mathematics in real-life contexts"],
@@ -1076,7 +1088,7 @@ document.body.addEventListener("change",e=>{ if(notWizard(e)) updateChecklist();
 /* ═══════════ MY PLANS LIBRARY ═══════════ */
 const LIB_KEY="ssa-myp-plans";
 function loadLib(){ try{ return JSON.parse(localStorage.getItem(LIB_KEY))||{}; }catch(e){ return {}; } }
-function saveLib(lib){ try{ localStorage.setItem(LIB_KEY, JSON.stringify(lib)); }catch(e){} }
+function saveLib(lib){ try{ localStorage.setItem(LIB_KEY, JSON.stringify(lib)); }catch(e){} try{ schedCloudPush(); }catch(e){} }
 function checklistStats(d){
   const active=CHK_RULES.filter(r=>!r.comp||d.components.includes(r.comp));
   return { done: active.filter(r=>r.test(d)).length, total: active.length };
@@ -1243,7 +1255,7 @@ try{
 /* ═══════════ SCHEDULE WIZARD ═══════════ */
 const SET_KEY="ssa-myp-settings";
 function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SET_KEY)); }catch(e){ return null; } }
-function saveSettings(s){ try{ localStorage.setItem(SET_KEY, JSON.stringify(s)); }catch(e){} }
+function saveSettings(s){ try{ localStorage.setItem(SET_KEY, JSON.stringify(s)); }catch(e){} try{ schedCloudPush(); }catch(e){} }
 DAYS.forEach((day,i)=>{
   $("wzDays").appendChild(chip("wzBd",day,"checkbox"));
   const wrap=document.createElement("div");
@@ -1318,6 +1330,121 @@ function defaultWeek(){
     }
   }
 }
+/* ═══════════ GOOGLE SIGN-IN + DRIVE SYNC (optional) ═══════════ */
+const G_SCOPES="https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
+const G_FILE="ssa-myp-data.json";
+var gTok=null,gUser=null,gFileId=null,_gPush=null,_gTokenClient=null;
+function cloudOn(){ return !!GOOGLE_CLIENT_ID; }
+function gReady(){ return typeof google!=="undefined"&&google.accounts&&google.accounts.oauth2; }
+function gClient(){
+  if(!_gTokenClient) _gTokenClient=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:G_SCOPES,callback:onGToken});
+  return _gTokenClient;
+}
+function gSignIn(silent){
+  if(!gReady()){ if(!silent) toast("Google sign-in is still loading — try again in a moment"); return; }
+  const opts=silent?{prompt:""}:{prompt:"select_account"};
+  const hint=localStorage.getItem("ssa-myp-gmail"); if(hint&&silent) opts.login_hint=hint;
+  try{ gClient().requestAccessToken(opts); }catch(e){}
+}
+async function onGToken(resp){
+  if(!resp||resp.error){ updateAuthUI(); return; }
+  gTok=resp.access_token;
+  try{
+    const u=await (await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{headers:{Authorization:"Bearer "+gTok}})).json();
+    gUser=u; try{ localStorage.setItem("ssa-myp-gmail",u.email||""); }catch(e){}
+  }catch(e){ gUser={}; }
+  updateAuthUI();
+  await gSyncDown();
+}
+function gSignOut(){
+  if(gTok&&gReady()){ try{ google.accounts.oauth2.revoke(gTok); }catch(e){} }
+  gTok=null; gUser=null; gFileId=null;
+  try{ localStorage.removeItem("ssa-myp-gmail"); }catch(e){}
+  updateAuthUI();
+  toast("Signed out — your plans stay on this device and in your Google Drive");
+}
+async function gApi(url,opts){
+  opts=opts||{}; opts.headers=Object.assign({Authorization:"Bearer "+gTok},opts.headers||{});
+  const r=await fetch(url,opts);
+  if(r.status===401){ gTok=null; updateAuthUI(); throw new Error("token expired"); }
+  return r;
+}
+async function gFind(){
+  const r=await gApi("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id,name)&q="+encodeURIComponent("name='"+G_FILE+"'"));
+  const j=await r.json();
+  gFileId=(j.files&&j.files[0]&&j.files[0].id)||null;
+  return gFileId;
+}
+async function gSyncDown(){
+  try{
+    await gFind();
+    let cloud=null;
+    if(gFileId){
+      const r=await gApi("https://www.googleapis.com/drive/v3/files/"+gFileId+"?alt=media");
+      cloud=await r.json();
+    }
+    const lib=loadLib(); let changed=false;
+    if(cloud&&cloud.plans){
+      Object.keys(cloud.plans).forEach(k=>{
+        if(!lib[k]||(cloud.plans[k].savedAt||0)>(lib[k].savedAt||0)){ lib[k]=cloud.plans[k]; changed=true; }
+      });
+    }
+    if(changed){ try{ localStorage.setItem(LIB_KEY,JSON.stringify(lib)); }catch(e){} }
+    if(cloud&&cloud.settings&&!loadSettings()) saveSettings(cloud.settings);
+    if(document.body.classList.contains("homeview")){ renderHome(); renderCal(); }
+    applySchedule();
+    schedCloudPush(); // push the merged library back up
+    toast("Signed in"+((gUser&&gUser.email)?" as "+gUser.email:"")+" — plans synced");
+  }catch(e){ /* stay local; next save retries */ }
+}
+function schedCloudPush(){
+  if(!gTok) return;
+  clearTimeout(_gPush);
+  _gPush=setTimeout(gPushNow,2500);
+}
+async function gPushNow(){
+  if(!gTok) return;
+  try{
+    const body=JSON.stringify({v:1,updatedAt:Date.now(),plans:loadLib(),settings:loadSettings()});
+    if(!gFileId) await gFind();
+    if(gFileId){
+      await gApi("https://www.googleapis.com/upload/drive/v3/files/"+gFileId+"?uploadType=media",{method:"PATCH",headers:{"Content-Type":"application/json"},body:body});
+    }else{
+      const bnd="ssa_myp_bnd";
+      const mp="--"+bnd+"\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n"+JSON.stringify({name:G_FILE,parents:["appDataFolder"]})+"\r\n--"+bnd+"\r\nContent-Type: application/json\r\n\r\n"+body+"\r\n--"+bnd+"--";
+      const r=await gApi("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{"Content-Type":"multipart/related; boundary="+bnd},body:mp});
+      const j=await r.json(); gFileId=j.id||null;
+    }
+    const el=$("saveState");
+    if(el&&el.textContent&&el.textContent.indexOf("Synced")<0) el.textContent+=" · Synced ☁";
+  }catch(e){}
+}
+function updateAuthUI(){
+  ["gAuthBtn","gAuthBtnHome"].forEach(id=>{
+    const b=$(id); if(!b) return;
+    if(!cloudOn()){ b.classList.add("hidden"); return; }
+    b.classList.remove("hidden");
+    const lbl=b.querySelector(".g-lbl");
+    if(gTok){ lbl.textContent=(gUser&&gUser.email)?gUser.email:"Signed in"; b.title="Signed in — click to sign out"; }
+    else{ lbl.textContent=id==="gAuthBtn"?"Sign in":"Sign in with Google"; b.title="Sign in to sync your plans across devices"; }
+  });
+}
+function gAuthClick(){
+  if(gTok){ if(confirm("Sign out of Google?\n\nYour plans stay saved on this device and in your Google Drive.")) gSignOut(); }
+  else gSignIn(false);
+}
+(function initCloud(){
+  updateAuthUI();
+  if(!cloudOn()) return;
+  $("gAuthBtn").onclick=gAuthClick;
+  $("gAuthBtnHome").onclick=gAuthClick;
+  /* silently resume the previous session once the Google library loads */
+  if(localStorage.getItem("ssa-myp-gmail")){
+    let tries=0;
+    const t=setInterval(()=>{ tries++; if(gReady()){ clearInterval(t); gSignIn(true); } else if(tries>20){ clearInterval(t); } },300);
+  }
+})();
+
 (function(){
   defaultWeek();
   updateWeekDates();
