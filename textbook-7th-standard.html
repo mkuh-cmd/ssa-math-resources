@@ -109,9 +109,9 @@
   .key-h    { background: #27ae60; }
   .guide-h  { background: #8e44ad; }
   .assess-links { padding: 8px 14px 12px; }
-  .assess-links a { display: block; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
-  .assess-links a:last-child { border-bottom: none; }
-  .assess-links a:hover { color: #27ae60; }
+  .assess-links a, .assess-links button { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-family: inherit; padding: 5px 0; color: #1a3a6b; text-decoration: none; font-size: 0.82rem; border-bottom: 1px solid #eee; }
+  .assess-links a:last-child, .assess-links button:last-child { border-bottom: none; }
+  .assess-links a:hover, .assess-links button:hover { color: #27ae60; }
 
   /* ── Skills Practice ── */
   .sp-q-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -126,8 +126,10 @@
   .sp-panel.active { display: block; }
   .sp-file-list { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
   .sp-file-item {
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 10px; width: 100%;
     padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
+    border-left: none; border-right: none; border-top: none;
+    background: none; cursor: pointer; font-family: inherit; text-align: left;
     text-decoration: none; color: #1a3a6b; font-size: 0.85rem; font-weight: 500;
     transition: background 0.12s;
   }
@@ -290,16 +292,30 @@ const BASE = "3.%20Textbook/4.%207th%20Standard";
 const e = encodeURIComponent;
 
 function openPreview(relUrl, title) {
-  const fullUrl = SITE_ROOT + relUrl;
-  const isPptx  = relUrl.toLowerCase().includes('.pptx');
-  const viewUrl = isPptx
-    ? 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fullUrl)
-    : fullUrl;
+  const isGoogleSlides = relUrl.indexOf('https://docs.google.com/presentation/') === 0;
+  let viewUrl, dlUrl, isDownloadAttr;
+
+  if (isGoogleSlides) {
+    // Native Google Slides — embed URL already has its own toolbar + fullscreen button.
+    viewUrl = relUrl;
+    const m = relUrl.match(/\/presentation\/d\/([^/]+)/);
+    dlUrl = m ? `https://docs.google.com/presentation/d/${m[1]}/export/pptx` : relUrl;
+    isDownloadAttr = false;
+  } else {
+    const fullUrl = SITE_ROOT + relUrl;
+    const isPptx  = relUrl.toLowerCase().includes('.pptx');
+    viewUrl = isPptx
+      ? 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fullUrl)
+      : fullUrl;
+    dlUrl = fullUrl;
+    isDownloadAttr = isPptx;
+  }
+
   document.getElementById('preview-iframe').src = viewUrl;
   document.getElementById('preview-title').textContent = title;
   const dl = document.getElementById('preview-dl');
-  dl.href = fullUrl;
-  if (isPptx) { dl.setAttribute('download',''); } else { dl.removeAttribute('download'); }
+  dl.href = dlUrl;
+  if (isDownloadAttr) { dl.setAttribute('download',''); } else { dl.removeAttribute('download'); }
   document.getElementById('preview-panel').classList.add('open');
 }
 function closePreview() {
@@ -442,6 +458,24 @@ const LESSON_NAMES = {
 
 const unitLessons = {1:6,2:9,3:8,4:10,5:10,6:11,7:10,8:6,9:8,10:10,11:9,12:6,13:9};
 
+// ── Google Slides file IDs (Web copies) — key "unit.lesson" -> Drive file ID ──
+// Falls back to the local .pptx for any lesson not yet listed here.
+const SLIDE_IDS = {
+  '1.1': '16cFVxPdRP5OmNrBNvm7lHzzZX8NwfbIyqUE9NLwf6VU',
+  '1.2': '1qwo-zxkBpUFvUNSEXKYUpxt08WLRqvkxj6CsFdu3ehA',
+  '1.3': '1CgxcA0v0ZhEjkGb6_0OJ8CmXSbHwL3OGfabJojJ_lU8',
+  '1.4': '1PGMbjf31qVamgbI5Z8LUB4wWnBAL5hvcKEJf7RaNDBg',
+  '1.5': '164L7BZv1pEHqcSpm8A8n-tBMEC5Ties8NgV1E3l0Lio',
+  '1.6': '150e5FeggeOgcRU0ok0dVTTBlnsRipxCwQ3VICBrZFzA'
+};
+function slideUrlFor(u, l) {
+  const key = `${u}.${l}`;
+  if (SLIDE_IDS[key]) {
+    return `https://docs.google.com/presentation/d/${SLIDE_IDS[key]}/embed?start=false&loop=false&delayms=3000`;
+  }
+  return `${BASE}/${e('1. Presentation Slide')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pptx')}`;
+}
+
 // ── Quarter groupings ──
 const QUARTERS = [
   { num: 1, units: [1, 2, 3] },
@@ -488,7 +522,7 @@ function showQuarter(qNum, btn) {
       for (let l = 1; l <= count; l++) {
         const key        = `${u}.${l}`;
         const lessonName = LESSON_NAMES[key] || '';
-        const slideUrl   = `${BASE}/${e('1. Presentation Slide')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pptx')}`;
+        const slideUrl   = slideUrlFor(u, l);
         const studentUrl = `${BASE}/${e('2. Student Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`;
         const teacherUrl = u === 9
           ? `${BASE}/${e('3. Teacher Pages')}/${e('Unit '+u)}/${e('Unit '+u+'.'+l+'.pdf')}`
@@ -561,9 +595,9 @@ function showQuarter(qNum, btn) {
     "Unit 12 Assessment [Guide].pdf","Unit 13 Assessment [Guide].pdf"
   ];
 
-  const blankLinks  = blanks.map(f  => `<a href="${AD}/${e('1. Blank')}/${e(f)}"  target="_blank">${f.replace('[blank]','').replace('.pdf','').trim()}</a>`).join('');
-  const keyLinks    = keys.map(f    => `<a href="${AD}/${e('2. Key')}/${e(f)}"    target="_blank">${f.replace('[Key]','Key').replace('.pdf','').replace(/\s+/g,' ').trim()}</a>`).join('');
-  const guideLinks  = guides.map(f  => `<a href="${AD}/${e('3. Guide')}/${e(f)}"  target="_blank">${f.replace('[Guide]','Guide').replace('.pdf','').trim()}</a>`).join('');
+  const blankLinks  = blanks.map(f  => { const lbl = f.replace('[blank]','').replace('.pdf','').trim(); return `<button onclick="openPreview('${AD}/${e('1. Blank')}/${e(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
+  const keyLinks    = keys.map(f    => { const lbl = f.replace('[Key]','Key').replace('.pdf','').replace(/\s+/g,' ').trim(); return `<button onclick="openPreview('${AD}/${e('2. Key')}/${e(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
+  const guideLinks  = guides.map(f  => { const lbl = f.replace('[Guide]','Guide').replace('.pdf','').trim(); return `<button onclick="openPreview('${AD}/${e('3. Guide')}/${e(f)}', '${lbl.replace(/'/g,"\\'")}')">${lbl}</button>`; }).join('');
 
   grid.innerHTML = `
     <div class="assess-col"><div class="assess-header blank-h">Blank Assessments</div><div class="assess-links">${blankLinks}</div></div>
@@ -593,11 +627,11 @@ function showSpQ(q, btn) {
     files.forEach((filename, idx) => {
       const label = filename.replace(/^\d+\.\s*/, '').replace('.pdf', '');
       const url = `${SP_BASE}/${e('7th Grade Standard')}/${e(quarter)}/${e(filename)}`;
-      list.innerHTML += `<a class="sp-file-item" href="${url}" target="_blank">
+      list.innerHTML += `<button class="sp-file-item" onclick="openPreview('${url}', '${label.replace(/'/g,"\\'")}')">
         <span class="sp-num">${idx + 1}</span>
         <span>${label}</span>
         <span class="sp-badge">SP</span>
-      </a>`;
+      </button>`;
     });
   }
 
